@@ -34,39 +34,22 @@ public class MainLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.example.liranyehudar.socialnetworkforacademic",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
         loginButton = findViewById(R.id.login_button);
 
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(getApplicationContext(),"sucess to login",Toast.LENGTH_LONG).show();
+
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(getApplicationContext(),"cancel",Toast.LENGTH_LONG).show();
+
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
 
             }
         });
