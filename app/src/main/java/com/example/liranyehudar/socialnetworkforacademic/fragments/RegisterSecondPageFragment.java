@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.liranyehudar.socialnetworkforacademic.Interface.Communicator;
 import com.example.liranyehudar.socialnetworkforacademic.R;
@@ -20,7 +21,9 @@ import com.example.liranyehudar.socialnetworkforacademic.R;
 public class RegisterSecondPageFragment extends Fragment {
 
     Communicator communicator;
-
+    EditText editPassword;
+    EditText editConfirmPass;
+    Button nextButton;
 
     public RegisterSecondPageFragment() {
         // Required empty public constructor
@@ -37,7 +40,7 @@ public class RegisterSecondPageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view  = inflater.inflate(R.layout.fragment_register_second_page, container, false);
-        Button nextButton = view.findViewById(R.id.btn_next_to_third);
+        bindUI(view);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +54,12 @@ public class RegisterSecondPageFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void bindUI(View view) {
+        nextButton = view.findViewById(R.id.btn_next_to_third);
+        editPassword = view.findViewById(R.id.edit_password);
+        editConfirmPass = view.findViewById(R.id.edit_confirm_password);
     }
 
 }

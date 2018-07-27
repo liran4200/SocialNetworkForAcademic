@@ -55,6 +55,4 @@ public class RegisterFirstPageFragment extends Fragment {
         return view;
     }
 
-
-
 }
