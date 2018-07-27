@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.Interface.Communicator;
 import com.example.liranyehudar.socialnetworkforacademic.R;
@@ -44,13 +45,19 @@ public class RegisterSecondPageFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                communicator.update();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                Fragment fragment = new RegisterThirdPageFragment();
-                fragmentTransaction.replace(R.id.fragments_container,fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                String password = editPassword.getText().toString();
+                String confirmPass = editConfirmPass.getText().toString();
+                if(passwordValidation(password,confirmPass)) { // validation password
+                    // miss encryption password and set student object
+
+                    communicator.update();
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    Fragment fragment = new RegisterThirdPageFragment();
+                    fragmentTransaction.replace(R.id.fragments_container, fragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
             }
         });
         return view;
@@ -60,6 +67,20 @@ public class RegisterSecondPageFragment extends Fragment {
         nextButton = view.findViewById(R.id.btn_next_to_third);
         editPassword = view.findViewById(R.id.edit_password);
         editConfirmPass = view.findViewById(R.id.edit_confirm_password);
+    }
+
+    private boolean passwordValidation(String password,String confirmPass) {
+        if(password.length() == 0 || confirmPass.length() == 0){
+            Toast.makeText(getActivity().getApplicationContext(),"Please fill all fields",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(!password.equals(confirmPass)){
+            Toast.makeText(getActivity().getApplicationContext(),"Passwords do not match,try again",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 
 }
