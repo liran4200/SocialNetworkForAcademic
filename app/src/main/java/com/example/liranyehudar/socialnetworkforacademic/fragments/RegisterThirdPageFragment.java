@@ -1,15 +1,20 @@
 package com.example.liranyehudar.socialnetworkforacademic.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
+import com.example.liranyehudar.socialnetworkforacademic.Interface.Communicator;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 
 import java.util.ArrayList;
@@ -34,11 +39,18 @@ public class RegisterThirdPageFragment extends Fragment {
     Spinner spinnerAcademicInstitution;
     Spinner spinnerStudies;
     Spinner spinnerYears;
+    Button btnNext;
+    Communicator communicator;
 
     public RegisterThirdPageFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        communicator = (Communicator)context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +67,19 @@ public class RegisterThirdPageFragment extends Fragment {
         ArrayList<String> listYears = new ArrayList<String>(Arrays.asList(years));
         initSpinner(listYears, spinnerYears);
 
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                communicator.update();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                Fragment fragment = new RegisterFourthPageFragment();
+                fragmentTransaction.replace(R.id.fragments_container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
         return view;
     }
 
@@ -62,6 +87,7 @@ public class RegisterThirdPageFragment extends Fragment {
         spinnerAcademicInstitution = v.findViewById(R.id.spinner_academic);
         spinnerStudies = v.findViewById(R.id.spinner_studies);
         spinnerYears = v.findViewById(R.id.spinner_year);
+        btnNext = v.findViewById(R.id.btn_next_select_courses);
     }
 
     private void initSpinner(ArrayList<String> list, Spinner sp) {

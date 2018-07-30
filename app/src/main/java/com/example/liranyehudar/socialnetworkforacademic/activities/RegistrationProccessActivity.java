@@ -11,6 +11,7 @@ import com.example.liranyehudar.socialnetworkforacademic.Interface.Communicator;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterFirstPageFragment;
+import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterFourthPageFragment;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterThirdPageFragment;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
