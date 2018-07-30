@@ -14,6 +14,11 @@ import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterFirst
 import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterFourthPageFragment;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterThirdPageFragment;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 
 
 public class RegistrationProccessActivity extends AppCompatActivity implements Communicator {
@@ -38,7 +43,8 @@ public class RegistrationProccessActivity extends AppCompatActivity implements C
         fragmentTransaction = fragmentManager.beginTransaction();
         switch (callingBy){
             case RegistrationTypes.BY_FACEBOOK: {
-                progressBar.setProgress(PROGRESS_CHUNCK*3);
+                currentProgress = PROGRESS_CHUNCK*3;
+                progressBar.setProgress(currentProgress);
                 Student student =(Student)getIntent().getSerializableExtra("student");
                 Bundle args = new Bundle();
                 args.putSerializable("student",student);
@@ -64,6 +70,22 @@ public class RegistrationProccessActivity extends AppCompatActivity implements C
 
     private void bindUI() {
         progressBar = findViewById(R.id.progress_bar);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        int count = fragmentManager.getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+            //additional code
+        } else {
+            fragmentManager.popBackStack();
+            currentProgress-=PROGRESS_CHUNCK;
+            progressBar.setProgress(currentProgress);
+        }
+
     }
 
     @Override

@@ -17,6 +17,8 @@ import com.facebook.FacebookException;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -119,5 +121,28 @@ public class MainLoginActivity extends AppCompatActivity{
             Log.e("JsonError",e.getMessage());
         }
         return student;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        disconnectFromFacebook();
+    }
+
+    public void disconnectFromFacebook() {
+
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
     }
 }
