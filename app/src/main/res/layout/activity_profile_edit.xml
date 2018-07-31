@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorForUser">
+
+    <TextView
+        android:id="@+id/edit_profile_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Edit Profile"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="77dp"
+        android:text="Full Name:"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="141dp"
+        android:text="Country:"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="199dp"
+        android:text="City:"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/education"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="256dp"
+        android:text="Education:"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/Year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="206dp"
+        android:text="Year:"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+
+    <EditText
+        android:id="@+id/edt_userName"
+        android:layout_width="286dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/userName"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="-6dp"
+        android:hint="Full Name" />
+
+
+    <EditText
+        android:id="@+id/edt_country"
+        android:layout_width="307dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/country"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="-6dp"
+        android:hint="Country" />
+
+    <EditText
+        android:id="@+id/edt_education"
+        android:layout_width="289dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/education"
+        android:layout_alignParentEnd="true"
+        android:hint="Education" />
+
+    <EditText
+        android:id="@+id/edt_year"
+        android:layout_width="307dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Year"
+        android:layout_toEndOf="@+id/Year"
+        android:hint="Year" />
+
+    <EditText
+        android:id="@+id/edt_city"
+        android:layout_width="307dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/city"
+        android:layout_toEndOf="@+id/Year"
+        android:hint="City" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="21dp"
+        android:background="#03B424"
+        android:text="save"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
