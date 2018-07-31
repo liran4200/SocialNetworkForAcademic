@@ -9,4 +9,8 @@
     <string name="nav_profile">Profile</string>
     <string name="nav_courses">Courses</string>
     <string name="nav_search">Search</string>
+
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_profile_edit">ProfileEditActivity</string>
+
 </resources>

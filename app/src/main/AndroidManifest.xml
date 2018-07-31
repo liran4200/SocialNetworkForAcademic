@@ -4,6 +4,10 @@
     package="com.example.liranyehudar.socialnetworkforacademic">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
 
 
     <application
@@ -43,7 +47,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RegistrationProccessActivity" />
-        <activity android:name=".activities.MainActivity"></activity>
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.ProfileEditActivity"
+            android:label="@string/title_activity_profile_edit"
+            android:theme="@style/AppTheme"></activity>
+
     </application>
 
 </manifest>
