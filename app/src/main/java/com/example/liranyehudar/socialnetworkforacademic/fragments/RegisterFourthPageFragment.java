@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileEditActivity;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterCoursesSelection;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Time;
@@ -39,7 +40,7 @@ public class RegisterFourthPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_register_fourth_page, container, false);
+        final View view = inflater.inflate(R.layout.fragment_register_fourth_page, container, false);
         bindUI(view);
         final HashSet<Course> selectedCourses = new HashSet<>();
         coursesList = getCoursesList();
@@ -52,6 +53,8 @@ public class RegisterFourthPageFragment extends Fragment {
             public void onClick(View v) {
                 Log.d("courses",selectedCourses.toString());
                 // go to feed page.
+                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                startActivity(intent);
             }
         });
 
