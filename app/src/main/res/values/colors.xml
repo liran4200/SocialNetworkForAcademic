@@ -3,6 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    
     <color name="colorBackGroundApp">#72b52b</color>
     <color name="colorLoginButton">#145116</color>
+    
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorTransparent">#80FFFFFF</color>
+    <color name="colorNavText">#28450a</color>
 </resources>

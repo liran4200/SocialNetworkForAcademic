@@ -28,6 +28,7 @@ import org.json.JSONObject;
 public class MainLoginActivity extends AppCompatActivity{
 
     LoginButton loginButton;
+    Button btnLogin;
     Button btnCreateAccount;
     CallbackManager callbackManager;
 
@@ -47,6 +48,14 @@ public class MainLoginActivity extends AppCompatActivity{
             }
 
 
+        });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+            }
         });
 
     }
@@ -106,6 +115,7 @@ public class MainLoginActivity extends AppCompatActivity{
 
     public void bindUI() {
         loginButton = findViewById(R.id.login_button);
+        btnLogin = findViewById(R.id.button_login);
         btnCreateAccount = findViewById(R.id.button_create_account);
         callbackManager = CallbackManager.Factory.create();
     }
