@@ -16,6 +16,7 @@ import android.widget.Spinner;
 
 import com.example.liranyehudar.socialnetworkforacademic.Interface.Communicator;
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,11 +37,13 @@ public class RegisterThirdPageFragment extends Fragment {
 
     String[] years ={"First year","Second year","Third year","Fourth year"};
 
-    Spinner spinnerAcademicInstitution;
-    Spinner spinnerStudies;
-    Spinner spinnerYears;
-    Button btnNext;
-    Communicator communicator;
+    private Spinner spinnerAcademicInstitution;
+    private Spinner spinnerStudies;
+    private Spinner spinnerYears;
+    private Button btnNext;
+    private Communicator communicator;
+
+    Student student;
 
     public RegisterThirdPageFragment() {
         // Required empty public constructor
@@ -58,6 +61,7 @@ public class RegisterThirdPageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_register_third_page, container, false);
         bindUI(view);
+        student = (Student) this.getArguments().getSerializable("student");
         ArrayList<String> listAcademic = new ArrayList<String>(Arrays.asList(academic));
         initSpinner(listAcademic , spinnerAcademicInstitution);
 
@@ -71,9 +75,17 @@ public class RegisterThirdPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 communicator.update();
+
+                student.setAcademicInstitution(spinnerAcademicInstitution.getSelectedItem().toString());
+                student.setStudiesYear(spinnerYears.getSelectedItem().toString());
+                student.setFieldOfStudy(spinnerStudies.getSelectedItem().toString());
+
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Fragment fragment = new RegisterFourthPageFragment();
+                Bundle parameters = new Bundle();
+                parameters.putSerializable("student",student);
+                fragment.setArguments(parameters);
                 fragmentTransaction.replace(R.id.fragments_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();

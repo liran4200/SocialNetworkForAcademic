@@ -90,7 +90,7 @@ public class MainLoginActivity extends AppCompatActivity{
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields","id,first_name,last_name,email");
+                parameters.putString("fields","id,first_name,last_name,email,picture.type(normal)");
                 graphRequest.setParameters(parameters);
                 graphRequest.executeAsync();
             }
@@ -102,7 +102,7 @@ public class MainLoginActivity extends AppCompatActivity{
 
             @Override
             public void onError(FacebookException error) {
-
+                Log.e("facebookError",error.getMessage());
             }
         });
     }
@@ -127,6 +127,8 @@ public class MainLoginActivity extends AppCompatActivity{
             student.setFirstName(object.getString("first_name"));
             student.setLastName(object.getString("last_name"));
             student.setEmail(object.getString("email"));
+            student.setProfileImageUrl(object.getJSONObject("picture")
+                    .getJSONObject("data").getString("url"));
         } catch (JSONException e) {
             Log.e("JsonError",e.getMessage());
         }

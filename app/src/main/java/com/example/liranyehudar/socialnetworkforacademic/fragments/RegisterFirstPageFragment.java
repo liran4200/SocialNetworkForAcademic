@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.liranyehudar.socialnetworkforacademic.Interface.Communicator;
 import com.example.liranyehudar.socialnetworkforacademic.R;
@@ -20,7 +21,12 @@ import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
  */
 public class RegisterFirstPageFragment extends Fragment {
 
-    Communicator communicator;
+    private Communicator communicator;
+    private EditText edtFirstName;
+    private EditText edtLastName;
+    private EditText edtEmail;
+
+    private Student student;
 
     public RegisterFirstPageFragment() {
         // Required empty public constructor
@@ -37,22 +43,37 @@ public class RegisterFirstPageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_register_first_page, container, false);
-        Student student = (Student) this.getArguments().getSerializable("student");
+        bindUI(view);
+        student = (Student) this.getArguments().getSerializable("student");
         Button nextButton = view.findViewById(R.id.btn_next);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 communicator.update();
 
+                student.setFirstName(edtFirstName.getText().toString());
+                student.setLastName(edtLastName.getText().toString());
+                student.setEmail(edtEmail.getText().toString());
+
+
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Fragment fragment = new RegisterSecondPageFragment();
+                Bundle parameters = new Bundle();
+                parameters.putSerializable("student",student);
+                fragment.setArguments(parameters);
                 fragmentTransaction.replace(R.id.fragments_container,fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
         return view;
+    }
+
+    private void bindUI(View view) {
+        edtFirstName = view.findViewById(R.id.edit_first_name);
+        edtLastName = view.findViewById(R.id.edit_last_name);
+        edtEmail = view.findViewById(R.id.edit_email);
     }
 
 }

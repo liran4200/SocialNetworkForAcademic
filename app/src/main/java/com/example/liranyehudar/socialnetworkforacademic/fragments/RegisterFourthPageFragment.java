@@ -13,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.activities.MainActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileEditActivity;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterCoursesSelection;
+import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Time;
 
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ public class RegisterFourthPageFragment extends Fragment {
     private RecycleViewAdapterCoursesSelection selectionAdapter;
     private Button btnSubmit;
 
+    private Student student;
+
     public RegisterFourthPageFragment() {
         // Required empty public constructor
     }
@@ -42,6 +46,9 @@ public class RegisterFourthPageFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_register_fourth_page, container, false);
         bindUI(view);
+
+        student = (Student) this.getArguments().getSerializable("student");
+
         final HashSet<Course> selectedCourses = new HashSet<>();
         coursesList = getCoursesList();
         selectionAdapter = new RecycleViewAdapterCoursesSelection(coursesList,selectedCourses,view.getContext());
@@ -53,7 +60,8 @@ public class RegisterFourthPageFragment extends Fragment {
             public void onClick(View v) {
                 Log.d("courses",selectedCourses.toString());
                 // go to feed page.
-                Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.putExtra("student",student);
                 startActivity(intent);
             }
         });

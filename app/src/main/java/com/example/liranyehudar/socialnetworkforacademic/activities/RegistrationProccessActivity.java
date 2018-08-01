@@ -25,12 +25,12 @@ public class RegistrationProccessActivity extends AppCompatActivity implements C
 
     final static int PROGRESS_CHUNCK = 25;
 
-    ProgressBar progressBar;
-    int currentProgress = PROGRESS_CHUNCK;
+    private ProgressBar progressBar;
+    private int currentProgress = PROGRESS_CHUNCK;
 
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
-    Fragment currentFragment;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

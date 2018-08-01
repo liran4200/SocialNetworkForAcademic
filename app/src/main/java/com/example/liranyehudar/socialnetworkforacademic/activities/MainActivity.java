@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.CoursesFragment;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.HomeFeedFragment;
+import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bindUI();
+        //Temporary ...
+        Student student =(Student) getIntent().getSerializableExtra("student");
+
         homeFeedFragment = new HomeFeedFragment();
         coursesFragment = new CoursesFragment();
 
