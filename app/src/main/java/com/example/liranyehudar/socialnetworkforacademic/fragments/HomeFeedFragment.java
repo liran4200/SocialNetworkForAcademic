@@ -7,12 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFeedFragment extends Fragment {
 
+    Student student;
 
     public HomeFeedFragment() {
         // Required empty public constructor
@@ -24,6 +26,7 @@ public class HomeFeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view  = inflater.inflate(R.layout.fragment_home_feed, container, false);
+        //student = (Student) getArguments().getSerializable("student");
 
         return view;
     }

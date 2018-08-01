@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         bindUI();
         //Temporary ...
-        Student student =(Student) getIntent().getSerializableExtra("student");
+       // Student student =(Student) getIntent().getSerializableExtra("student");
 
         homeFeedFragment = new HomeFeedFragment();
         coursesFragment = new CoursesFragment();
