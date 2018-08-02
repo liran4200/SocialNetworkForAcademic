@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.CoursesFragment;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.HomeFeedFragment;
+import com.example.liranyehudar.socialnetworkforacademic.fragments.SearchFragment;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private HomeFeedFragment homeFeedFragment;
     private CoursesFragment coursesFragment;
+    private SearchFragment searchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         homeFeedFragment = new HomeFeedFragment();
         coursesFragment = new CoursesFragment();
+        searchFragment = new SearchFragment();
 
         setFragment(homeFeedFragment); // default
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.nav_search:
+                        setFragment(searchFragment);
                         return true;
 
                         default:
