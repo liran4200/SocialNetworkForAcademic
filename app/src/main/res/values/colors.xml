@@ -11,4 +11,14 @@
     <color name="colorTransparent">#80FFFFFF</color>
     <color name="colorNavText">#28450a</color>
     <color name="colorForUser">#048b7a</color>
+    <color name="grey">#ff888888</color>
+    <color name="fuchsia">#FF00FF</color>
+    <color name="red">#FF0000</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="gray">#808080</color>
+    <color name="olive">#808000</color>
+    <color name="purple">#800080</color>
+    <color name="maroon">#800000</color>
+    <color name="aqua">#00FFFF</color>
+    <color name="lime">#00FF00</color>
 </resources>

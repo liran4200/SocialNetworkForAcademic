@@ -15,6 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.logic.ChildCategory;
+import com.example.liranyehudar.socialnetworkforacademic.logic.ParentCategory;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import iammert.com.expandablelib.ExpandableLayout;
+import iammert.com.expandablelib.Section;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -23,6 +31,8 @@ public class ProfileActivity extends AppCompatActivity {
     final String USER_COUNTRY = "country";
     final String USER_EDUCATION = "education";
     final String USER_CITY = "city";
+    final String USER_SKILLS = "skills";
+    final String USER_SKILLS_SIZE = "skillSize";
     final int REQUEST_CAMERA = 1;
     final int SELECT_FILE = 0;
 
@@ -36,9 +46,13 @@ public class ProfileActivity extends AppCompatActivity {
     private String userCity;
     private String userEducation;
     private String userYear;
+    private String userSkills;
+    private int skillsSize;
     private ImageButton editProfile;
     private ImageView camera;
     private ImageView profileImg;
+    private ExpandableLayout layout;
+
 
 
 
@@ -49,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         setUI();
         updateUI();
+        doLayout();
 
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +84,45 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra(USER_CITY,userCity);
                 intent.putExtra(USER_EDUCATION,userEducation);
                 intent.putExtra(USER_YEAR,userYear);
+                intent.putExtra(USER_SKILLS,userSkills);
                 startActivity(intent);
             }
         });
+
+    }
+    private void doLayout(){
+        layout.setRenderer(new ExpandableLayout.Renderer<ParentCategory,ChildCategory>() {
+
+            @Override
+            public void renderParent(View view, ParentCategory parentCategory, boolean isExpanded, int parentPosition) {
+                ((TextView)view.findViewById(R.id.tv_parent_name)).setText(parentCategory.getName());
+                view.findViewById(R.id.arrow).setBackgroundResource(isExpanded?R.drawable.ic_arrow_up:R.drawable.ic_arrow_down);
+            }
+
+            @Override
+            public void renderChild(View view, ChildCategory childCategory, int parentPosition, int childPosition) {
+                ((TextView)view.findViewById(R.id.tv_child_name)).setText(childCategory.getName());
+
+            }
+        });
+        layout.addSection(getSection("Courses","computer,data,assembly",3));
+        layout.addSection(getSection("Skills",userSkills,skillsSize));
+
+
+    }
+
+    private Section<ParentCategory,ChildCategory> getSection(String parent, String child,int size) {
+
+        Section<ParentCategory,ChildCategory> section = new Section<>();
+        ParentCategory parentCategory = new ParentCategory(parent);
+        String [] all = child.split(",");
+        List<ChildCategory> listChild = new ArrayList<>();
+        for(int i = 0; i<size; i++){
+            listChild.add(new ChildCategory(all[i]));
+        }
+        section.parent = parentCategory;
+        section.children.addAll(listChild);
+        return section;
 
     }
 
@@ -130,6 +181,7 @@ public class ProfileActivity extends AppCompatActivity {
         editProfile = (ImageButton) findViewById(R.id.imageButton3);
         profileImg = (ImageView)findViewById(R.id.user_profile_image);
         camera = (ImageView)findViewById(R.id.camera_profile);
+        layout = (ExpandableLayout)findViewById(R.id.expandable_layout);
     }
 
     private void updateUI() {
@@ -142,5 +194,10 @@ public class ProfileActivity extends AppCompatActivity {
         education_txt.setText("Education: "+userEducation);
         userYear = getIntent().getStringExtra(USER_YEAR).toString();
         year_txt.setText("Year: " + userYear);
+        skillsSize = getIntent().getIntExtra(USER_SKILLS_SIZE,-1);
+
+        userSkills = getIntent().getStringExtra(USER_SKILLS).toString();
     }
+
+
 }
