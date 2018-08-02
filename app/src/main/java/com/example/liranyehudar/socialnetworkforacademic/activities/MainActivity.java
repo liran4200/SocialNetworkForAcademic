@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.CoursesFragment;
@@ -17,7 +18,7 @@ import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView mMainNav;
-    private FrameLayout mMainFrame;
+    private LinearLayout mMainFrame;
 
     private HomeFeedFragment homeFeedFragment;
     private CoursesFragment coursesFragment;

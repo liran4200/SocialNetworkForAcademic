@@ -6,11 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/main_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/main_nav"></FrameLayout>
+        android:layout_above="@+id/main_nav"
+        android:orientation="horizontal"></LinearLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/main_nav"

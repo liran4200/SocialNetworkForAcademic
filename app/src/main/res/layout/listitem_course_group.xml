@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+    android:background="@drawable/border_top_down">
+
+    <TextView
+        android:id="@+id/txt_course"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingLeft="5dp"
+        android:text="1000 - Course name" />
+
+    <ImageView
+        android:id="@+id/message_group"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        android:background="@drawable/baseline_message_black_24dp" />
+
+    <ImageView
+        android:id="@+id/nav_group_course"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        android:background="@drawable/baseline_group_black_24dp" />
+
+</LinearLayout>
