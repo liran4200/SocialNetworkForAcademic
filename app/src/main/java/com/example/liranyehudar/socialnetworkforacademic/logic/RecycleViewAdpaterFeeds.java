@@ -35,7 +35,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
         holder.fullName.setText(modelFeedArrayList.get(position).getFullName());
         holder.txtStatus.setText(modelFeedArrayList.get(position).getStatus());
         holder.txtTime.setText(modelFeedArrayList.get(position).getTime());
-        holder.txtCommentsAmount.setText(modelFeedArrayList.get(position).getAmountOfComments()+"");
+        holder.txtCommentsAmount.setText(modelFeedArrayList.get(position).getAmountOfComments()+" comments");
         holder.txtLikesAmount.setText(modelFeedArrayList.get(position).getAmountOfLikes()+"");
     }
 

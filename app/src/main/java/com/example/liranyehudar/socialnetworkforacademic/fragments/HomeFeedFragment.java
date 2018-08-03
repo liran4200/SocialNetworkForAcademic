@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileEditActivity;
+import com.example.liranyehudar.socialnetworkforacademic.activities.SharePostActivty;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ModelFeed;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdpaterFeeds;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
@@ -28,6 +31,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFeedFragment extends Fragment {
+
+    public static int RESULT_SHARE_ACTIVTIY = 1 ;
 
     CircleImageView profile;
     TextView txtPost;
@@ -63,7 +68,8 @@ public class HomeFeedFragment extends Fragment {
         txtPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(v.getContext(), SharePostActivty.class);
+                startActivityForResult(intent,RESULT_SHARE_ACTIVTIY);
             }
         });
 
@@ -87,10 +93,31 @@ public class HomeFeedFragment extends Fragment {
         return list;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == getActivity().RESULT_OK) {
+
+            if(requestCode == RESULT_SHARE_ACTIVTIY){
+                String status = data.getStringExtra("post");
+                sharePost(status);
+            }
+            if (resultCode == getActivity().RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }
+
     private void bindUI(View view) {
         profile = view.findViewById(R.id.profile_image);
         recyclerView = view.findViewById(R.id.recycleView_posts);
         txtPost = view.findViewById(R.id.txt_post);
+    }
+
+    private void sharePost(String status) {
+        ModelFeed newModel = new ModelFeed(5,0,0,"Liran Yehduar",
+                status,"now");
+        modelFeedArrayList.add(0,newModel);
+        adpaterFeeds.notifyDataSetChanged();
     }
 
 }
