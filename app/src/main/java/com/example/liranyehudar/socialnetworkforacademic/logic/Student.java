@@ -13,9 +13,36 @@ public class Student implements Serializable{
     private String academicInstitution;
     private String studiesYear;
     private String profileImageUrl;
+    private String skills;
+    private String country;
+    private String city;
 
     public Student() {
 
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     public void setPassword(String password) {
