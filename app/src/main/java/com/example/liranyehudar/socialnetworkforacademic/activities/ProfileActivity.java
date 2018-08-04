@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ChildCategory;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ParentCategory;
+import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,32 +27,24 @@ import iammert.com.expandablelib.Section;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    final String USER_NAME = "name";
-    final String USER_YEAR = "year";
-    final String USER_COUNTRY = "country";
-    final String USER_EDUCATION = "education";
-    final String USER_CITY = "city";
-    final String USER_SKILLS = "skills";
     final String USER_SKILLS_SIZE = "skillSize";
+    final String STUDENT = "student";
     final int REQUEST_CAMERA = 1;
     final int SELECT_FILE = 0;
 
+    private boolean counerRot = false;
     private TextView name_txt;
     private TextView country_txt;
-    private TextView city_txt;
     private TextView education_txt;
     private TextView year_txt;
-    private String userName;
-    private String userCountry;
-    private String userCity;
-    private String userEducation;
-    private String userYear;
     private String userSkills;
     private int skillsSize;
     private ImageButton editProfile;
     private ImageView camera;
     private ImageView profileImg;
     private ExpandableLayout layout;
+    private Student student;
+    private float size;
 
 
 
@@ -79,12 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this,ProfileEditActivity.class);
-                intent.putExtra(USER_NAME,userName);
-                intent.putExtra(USER_COUNTRY,userCountry);
-                intent.putExtra(USER_CITY,userCity);
-                intent.putExtra(USER_EDUCATION,userEducation);
-                intent.putExtra(USER_YEAR,userYear);
-                intent.putExtra(USER_SKILLS,userSkills);
+                intent.putExtra(STUDENT,student);
                 startActivity(intent);
             }
         });
@@ -166,8 +154,30 @@ public class ProfileActivity extends AppCompatActivity {
                 Bitmap bmp = (Bitmap)bundle.get("data");
                 profileImg.setImageBitmap(bmp);
             }else if(requestCode == SELECT_FILE){
+                final CharSequence [] items = {"Is Ok","Inverted picture ","Picture on the right side","Picture on the left side"};
                 Uri selectImage = data.getData();
                 profileImg.setImageURI(selectImage);
+                if(counerRot == false){
+                    profileImg.setRotation(profileImg.getRotation()+ 270);
+                    counerRot = true;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(items[which].equals("Is Ok")){
+                            dialog.dismiss();
+                        }else if(items[which].equals("Inverted picture ")){
+                            profileImg.setRotation(profileImg.getRotation()+ 180);
+                        }else if(items[which].equals("Picture on the right side")){
+                            profileImg.setRotation(profileImg.getRotation()+ 90);
+                        }else{
+                            profileImg.setRotation(profileImg.getRotation()+ 270);
+                        }
+                    }
+                });
+                builder.show();
+
             }
         }
     }
@@ -175,7 +185,6 @@ public class ProfileActivity extends AppCompatActivity {
     private void setUI(){
         name_txt = (TextView)findViewById(R.id.name_user);
         country_txt = (TextView)findViewById(R.id.city_and_country);
-        city_txt = (TextView)findViewById(R.id.city_and_country);
         education_txt = (TextView)findViewById(R.id.textView5);
         year_txt = (TextView)findViewById(R.id.textView9);
         editProfile = (ImageButton) findViewById(R.id.imageButton3);
@@ -185,18 +194,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        userName = getIntent().getStringExtra(USER_NAME).toString();
-        name_txt.setText(userName);
-        userCountry = getIntent().getStringExtra(USER_COUNTRY).toString();
-        userCity = getIntent().getStringExtra(USER_CITY).toString();
-        country_txt.setText(userCity + ","+userCountry);
-        userEducation = getIntent().getStringExtra(USER_EDUCATION).toString();
-        education_txt.setText("Education: "+userEducation);
-        userYear = getIntent().getStringExtra(USER_YEAR).toString();
-        year_txt.setText("Year: " + userYear);
+        student = (Student) getIntent().getSerializableExtra(STUDENT);
+        name_txt.setText(student.getFirstName() + " " + student.getLastName());;
+        country_txt.setText(student.getCity() + ","+student.getCountry());
+        education_txt.setText("Education: "+student.getAcademicInstitution());
+        year_txt.setText("Year: " + student.getStudiesYear());
         skillsSize = getIntent().getIntExtra(USER_SKILLS_SIZE,-1);
-
-        userSkills = getIntent().getStringExtra(USER_SKILLS).toString();
+        userSkills = student.getSkills();
     }
 
 

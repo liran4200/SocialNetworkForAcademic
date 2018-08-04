@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
@@ -20,6 +21,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     final String USER_CITY = "city";
     final String USER_SKILLS = "skills";
     final String USER_SKILLS_SIZE = "skillSize";
+    final String STUDENT = "student";
 
     private EditText nameEdit;
     private EditText yearEdit;
@@ -43,6 +45,8 @@ public class ProfileEditActivity extends AppCompatActivity {
     private boolean isOk;
     private int skillSize;
     private String [] allSkills;
+    private String [] fullName;
+    private Student student;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         // intent
         int source = 0 ;
         init();
+        putOnStudent();
+        putFeildsOfStudent();
         if(source == RegistrationTypes.FR0M_PROFILE) {
             updateUI();
         }
@@ -79,14 +85,16 @@ public class ProfileEditActivity extends AppCompatActivity {
                 if(isOk == false){
                     return;
                 }else{
+                    fullName = name.split(" ");
+                    student.setFirstName(fullName[0]);
+                    student.setLastName(fullName[1]);
+                    student.setCountry(country);
+                    student.setCity(city);
+                    student.setAcademicInstitution(education);
+                    student.setStudiesYear(year);
+                    student.setSkills(skills);
                     Intent i = new Intent(getBaseContext(),ProfileActivity.class);
-                    i.putExtra(USER_NAME,name);
-                    i.putExtra(USER_COUNTRY,country);
-                    i.putExtra(USER_CITY,city);
-                    i.putExtra(USER_EDUCATION,education);
-                    i.putExtra(USER_YEAR,year);
-                    i.putExtra(USER_SKILLS,skills);
-
+                    i.putExtra(STUDENT,student);
                     i.putExtra(USER_SKILLS_SIZE,skillSize);
 
                     startActivity(i);
@@ -174,6 +182,22 @@ public class ProfileEditActivity extends AppCompatActivity {
         yearEdit = findViewById(R.id.edit_the_year);
         skillEdit = findViewById(R.id.edit_skill);
         saveButton = findViewById(R.id.btn_save);
+
+    }
+
+    private void putOnStudent(){
+        student = new Student();
+        student.setFirstName("Nir");
+        student.setLastName("Finz");
+        student.setFieldOfStudy("Software");
+        student.setAcademicInstitution("Afeka collage");
+        student.setStudiesYear("3");
+
+    }
+    private void putFeildsOfStudent(){
+        nameEdit.setText(student.getFirstName() + " " + student.getLastName());
+        educationEdit.setText(student.getAcademicInstitution());
+        yearEdit.setText(student.getStudiesYear());
     }
 
     private void updateUI() {
