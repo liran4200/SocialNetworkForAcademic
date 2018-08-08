@@ -1,14 +1,13 @@
 package com.example.liranyehudar.socialnetworkforacademic.logic;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,16 +28,16 @@ public class RecycleViewAdapterCoursesSelection extends RecyclerView.Adapter<Rec
         this.context = context;
     }
 
-    @NonNull
+
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_courses_selection, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         Log.d("Adapter","onBindViewHolder called");
         holder.heading.setText(courses.get(position).heading());
         holder.description.setText(courses.get(position).description());
@@ -90,7 +89,7 @@ public class RecycleViewAdapterCoursesSelection extends RecyclerView.Adapter<Rec
         TextView description;
         TextView takesPlaceOn;
         CheckBox selection;
-        ConstraintLayout parent;
+        LinearLayout parent;
 
         public ViewHolder(View itemView) {
             super(itemView);

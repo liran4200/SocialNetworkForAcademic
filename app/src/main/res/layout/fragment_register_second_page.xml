@@ -1,65 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.RegisterSecondPageFragment">
 
+    <LinearLayout
+        android:layout_width="222dp"
+        android:layout_height="371dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
-        android:ems="10"
-        android:gravity="left"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:selectAllOnFocus="false"
-        android:singleLine="false"
-        app:layout_constraintBottom_toTopOf="@+id/edit_confirm_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.477" />
+        <EditText
+            android:id="@+id/edt_country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:hint="Your Country"
+            android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/edit_confirm_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Confirm password"
-        android:inputType="textPassword"
-        android:gravity="left"
-        app:layout_constraintBottom_toTopOf="@+id/btn_next_to_third"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_password"
-        app:layout_constraintVertical_bias="0.464" />
+        <EditText
+            android:id="@+id/edt_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:hint="Your City"
+            android:textSize="20sp" />
 
+        <Button
+            android:id="@+id/btn_next_to_third"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:text="Next" />
 
-    <Button
-        android:id="@+id/btn_next_to_third"
-        android:layout_width="135dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="228dp"
-        android:layout_marginTop="8dp"
-        android:text="Next"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_confirm_password"
-        app:layout_constraintVertical_bias="1.0" />
+    </LinearLayout>
 
-
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

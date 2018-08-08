@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.Interface.Communicator;
 import com.example.liranyehudar.socialnetworkforacademic.R;
@@ -21,12 +22,15 @@ import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
  */
 public class RegisterFirstPageFragment extends Fragment {
 
+    public static final int MIN_PASS_LENGTH = 6;
+
+    private Student student;
     private Communicator communicator;
     private EditText edtFirstName;
     private EditText edtLastName;
     private EditText edtEmail;
-
-    private Student student;
+    private EditText edtPassword;
+    private EditText edtConfirmPass;
 
     public RegisterFirstPageFragment() {
         // Required empty public constructor
@@ -49,31 +53,53 @@ public class RegisterFirstPageFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                communicator.update();
+                String pass = edtPassword.getText().toString();
+                String confirmPass = edtConfirmPass.getText().toString();
+                if(passwordValidation(pass,confirmPass)) {
+                    communicator.update();
 
-                student.setFirstName(edtFirstName.getText().toString());
-                student.setLastName(edtLastName.getText().toString());
-                student.setEmail(edtEmail.getText().toString());
-
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                Fragment fragment = new RegisterSecondPageFragment();
-                Bundle parameters = new Bundle();
-                parameters.putSerializable("student",student);
-                fragment.setArguments(parameters);
-                fragmentTransaction.replace(R.id.fragments_container,fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    Fragment fragment = new RegisterSecondPageFragment();
+                    Bundle parameters = new Bundle();
+                    parameters.putSerializable("student", student);
+                    fragment.setArguments(parameters);
+                    fragmentTransaction.replace(R.id.fragments_container, fragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
             }
         });
+
         return view;
     }
+
 
     private void bindUI(View view) {
         edtFirstName = view.findViewById(R.id.edit_first_name);
         edtLastName = view.findViewById(R.id.edit_last_name);
         edtEmail = view.findViewById(R.id.edit_email);
+        edtPassword = view.findViewById(R.id.edit_password);
+        edtConfirmPass = view.findViewById(R.id.edit_confirm_password);
+    }
+
+    private boolean passwordValidation(String password,String confirmPass) {
+        if(password.length() == 0 || confirmPass.length() == 0){
+            Toast.makeText(getActivity().getApplicationContext(),"Please fill all fields",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(password.length()< MIN_PASS_LENGTH){
+            Toast.makeText(getActivity().getApplicationContext(),"You have to enter a passowrd at least 6 letter",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(!password.equals(confirmPass)){
+            Toast.makeText(getActivity().getApplicationContext(),"Passwords do not match,try again",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 
 }

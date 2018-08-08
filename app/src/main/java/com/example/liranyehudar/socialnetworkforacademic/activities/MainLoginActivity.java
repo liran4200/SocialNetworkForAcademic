@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.facebook.AccessToken;
@@ -21,22 +21,27 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
+import com.google.firebase.auth.FirebaseAuth;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainLoginActivity extends AppCompatActivity{
 
-    LoginButton loginButton;
-    Button btnLogin;
-    Button btnCreateAccount;
-    CallbackManager callbackManager;
+    private LoginButton loginButton;
+    private Button btnLogin;
+    private Button btnCreateAccount;
+    private EditText edtEmail;
+    private EditText edtPassword;
+
+    private CallbackManager callbackManager;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
 
+        firebaseAuth = FirebaseAuth.getInstance();
         bindUI();
         loginWithFacebook();
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +63,18 @@ public class MainLoginActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        disconnectFromFacebook();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void loginWithFacebook() {
@@ -107,16 +124,12 @@ public class MainLoginActivity extends AppCompatActivity{
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void bindUI() {
         loginButton = findViewById(R.id.login_button);
         btnLogin = findViewById(R.id.button_login);
         btnCreateAccount = findViewById(R.id.button_create_account);
+        edtEmail = findViewById(R.id.edt_email);
+        edtPassword = findViewById(R.id.edt_password);
         callbackManager = CallbackManager.Factory.create();
     }
 
@@ -133,12 +146,6 @@ public class MainLoginActivity extends AppCompatActivity{
             Log.e("JsonError",e.getMessage());
         }
         return student;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        disconnectFromFacebook();
     }
 
     public void disconnectFromFacebook() {

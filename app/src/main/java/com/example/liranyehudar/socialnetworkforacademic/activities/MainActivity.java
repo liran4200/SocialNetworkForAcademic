@@ -15,6 +15,10 @@ import com.example.liranyehudar.socialnetworkforacademic.fragments.CoursesFragme
 import com.example.liranyehudar.socialnetworkforacademic.fragments.HomeFeedFragment;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.SearchFragment;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -36,14 +36,13 @@ public class RegisterThirdPageFragment extends Fragment {
             "Biomedical engineering"};
 
     String[] years ={"First year","Second year","Third year","Fourth year"};
+    Student student;
 
     private Spinner spinnerAcademicInstitution;
     private Spinner spinnerStudies;
     private Spinner spinnerYears;
     private Button btnNext;
     private Communicator communicator;
-
-    Student student;
 
     public RegisterThirdPageFragment() {
         // Required empty public constructor
