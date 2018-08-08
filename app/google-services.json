@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1023286739295",
+    "firebase_url": "https://socialnetworkforacademic.firebaseio.com",
+    "project_id": "socialnetworkforacademic",
+    "storage_bucket": "socialnetworkforacademic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023286739295:android:c9238d33b36ea155",
+        "android_client_info": {
+          "package_name": "com.example.liranyehudar.socialnetworkforacademic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023286739295-m80p7ppf51k2dvdttu9kusd21d7k1q80.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoRQJAHT7D9R-B1loJIRm6QCRQhJ3UDlo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
