@@ -200,7 +200,7 @@ public class ProfileActivity extends AppCompatActivity {
         education_txt.setText("Education: "+student.getAcademicInstitution());
         year_txt.setText("Year: " + student.getStudiesYear());
         skillsSize = getIntent().getIntExtra(USER_SKILLS_SIZE,-1);
-        userSkills = student.getSkills();
+    //    userSkills = student.getSkills();
     }
 
 

@@ -2,8 +2,10 @@ package com.example.liranyehudar.socialnetworkforacademic.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +13,12 @@ import android.widget.EditText;
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
@@ -47,18 +55,17 @@ public class ProfileEditActivity extends AppCompatActivity {
     private String [] allSkills;
     private String [] fullName;
     private Student student;
-
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
-
-
         // intent
         int source = 0 ;
         init();
-        putOnStudent();
-        putFeildsOfStudent();
+        readFromDB();
         if(source == RegistrationTypes.FR0M_PROFILE) {
             updateUI();
         }
@@ -92,7 +99,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     student.setCity(city);
                     student.setAcademicInstitution(education);
                     student.setStudiesYear(year);
-                    student.setSkills(skills);
+                   // student.setSkills(skills);
                     Intent i = new Intent(getBaseContext(),ProfileActivity.class);
                     i.putExtra(STUDENT,student);
                     i.putExtra(USER_SKILLS_SIZE,skillSize);
@@ -103,6 +110,29 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void readFromDB() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        ref =  database.getReference("Students");
+        String userid = firebaseAuth.getUid();
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    student = childSnapshot.getValue(Student.class);
+                }
+                updateUI();
+                Log.d("student",student.toString());
+            }
+
+            @Override
+            public void onCancelled( DatabaseError databaseError) {
+                Log.d("error",databaseError.getMessage());
+            }
+        });
     }
 
     public boolean checkAll(){
@@ -182,37 +212,13 @@ public class ProfileEditActivity extends AppCompatActivity {
         yearEdit = findViewById(R.id.edit_the_year);
         skillEdit = findViewById(R.id.edit_skill);
         saveButton = findViewById(R.id.btn_save);
-
-    }
-
-    private void putOnStudent(){
-        student = new Student();
-        student.setFirstName("Nir");
-        student.setLastName("Finz");
-        student.setFieldOfStudy("Software");
-        student.setAcademicInstitution("Afeka collage");
-        student.setStudiesYear("3");
-
-    }
-    private void putFeildsOfStudent(){
-        nameEdit.setText(student.getFirstName() + " " + student.getLastName());
-        educationEdit.setText(student.getAcademicInstitution());
-        yearEdit.setText(student.getStudiesYear());
     }
 
     private void updateUI() {
-        nameEdit.setText(name);
-        country = getIntent().getStringExtra(USER_COUNTRY).toString();
-        countryEdit.setText(country);
-        city = getIntent().getStringExtra(USER_CITY).toString();
-        cityEdit.setText(city);
-        education = getIntent().getStringExtra(USER_EDUCATION).toString();
-        educationEdit.setText(education);
-        year = getIntent().getStringExtra(USER_YEAR).toString();
-        yearEdit.setText(year);
-        skills = getIntent().getStringExtra(USER_YEAR).toString();
-        skillEdit.setText(skills);
-
+        nameEdit.setText(student.getFirstName()+" "+ student.getLastName());
+        cityEdit.setText(student.getCity()+", "+student.getCountry());
+        educationEdit.setText(student.getAcademicInstitution());
+        yearEdit.setText(student.getStudiesYear());
     }
 
 }

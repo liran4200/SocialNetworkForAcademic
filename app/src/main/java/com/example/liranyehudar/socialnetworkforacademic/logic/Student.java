@@ -1,32 +1,24 @@
 package com.example.liranyehudar.socialnetworkforacademic.logic;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.io.Serializable;
 
+@IgnoreExtraProperties
 public class Student implements Serializable{
 
-    private String id;
     private String firstName;
     private String lastName;
-    private String email;
-    private String password;
-    private String fieldOfStudy;
-    private String academicInstitution;
-    private String studiesYear;
-    private String profileImageUrl;
-    private String skills;
+    private String field;
+    private String academic;
+    private String year;
+    //private String profileImageUrl;
+    //private String skills;
     private String country;
     private String city;
 
     public Student() {
 
-    }
-
-    public void setSkills(String skills) {
-        this.skills = skills;
-    }
-
-    public String getSkills() {
-        return skills;
     }
 
     public void setCountry(String country) {
@@ -45,22 +37,6 @@ public class Student implements Serializable{
         return city;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -77,44 +53,29 @@ public class Student implements Serializable{
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getFieldOfStudy() {
-        return fieldOfStudy;
+        return field;
     }
 
     public void setFieldOfStudy(String fieldOfStudy) {
-        this.fieldOfStudy = fieldOfStudy;
+        this.field = fieldOfStudy;
     }
 
     public String getAcademicInstitution() {
-        return academicInstitution;
+        return academic;
     }
 
     public void setAcademicInstitution(String academicInstitution) {
-        this.academicInstitution = academicInstitution;
+        this.academic = academicInstitution;
     }
 
     public String getStudiesYear() {
-        return studiesYear;
+        return year;
     }
 
     public void setStudiesYear(String studiesYear) {
-        this.studiesYear = studiesYear;
-    }
-
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+        this.year = studiesYear;
     }
 
     @Override

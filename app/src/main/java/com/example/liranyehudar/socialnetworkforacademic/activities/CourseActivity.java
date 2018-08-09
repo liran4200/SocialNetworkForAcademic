@@ -28,7 +28,7 @@ public class CourseActivity extends AppCompatActivity {
     }
 
     private void init(){
-        courseName = (TextView)findViewById(R.id.name_course);
+        courseName = (TextView)findViewById(R.id.course_the_name);
         courseNumnber = (TextView)findViewById(R.id.number_of_course);
         semester = (TextView)findViewById(R.id.num_of_semester);
         lecturer = (TextView)findViewById(R.id.lecturer);

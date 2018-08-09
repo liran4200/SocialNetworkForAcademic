@@ -140,12 +140,12 @@ public class MainLoginActivity extends AppCompatActivity{
     public Student getData(JSONObject object) {
         Student student = new Student();
         try {
-            student.setId(object.getString("id"));
+         //   student.setId(object.getString("id"));
             student.setFirstName(object.getString("first_name"));
             student.setLastName(object.getString("last_name"));
-            student.setEmail(object.getString("email"));
-            student.setProfileImageUrl(object.getJSONObject("picture")
-                    .getJSONObject("data").getString("url"));
+         //   student.setEmail(object.getString("email"));
+        //    student.setProfileImageUrl(object.getJSONObject("picture")
+         //           .getJSONObject("data").getString("url"));
         } catch (JSONException e) {
             Log.e("JsonError",e.getMessage());
         }
@@ -181,7 +181,8 @@ public class MainLoginActivity extends AppCompatActivity{
             @Override
             public void onComplete(Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    //mainactivty
+                    Intent intent = new Intent(getApplicationContext(),ProfileEditActivity.class);
                     startActivity(intent);
                 }else{
                     //handle error
