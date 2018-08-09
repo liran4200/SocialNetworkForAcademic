@@ -1,5 +1,6 @@
 package com.example.liranyehudar.socialnetworkforacademic.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -21,31 +22,28 @@ public class CourseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_course);
+        course = new Course(10143,"Assembly", "Mr.Adi Malach",Course.Semester.FIRST, Course.Day.MONDAY, new Time("10","32"),new Time("13","00"));
         init();
         setUI();
     }
 
     private void init(){
-        courseName = (TextView)findViewById(R.id.name_course);
-        courseNumnber = (TextView)findViewById(R.id.number_of_course);
-        semester = (TextView)findViewById(R.id.num_of_semester);
-        lecturer = (TextView)findViewById(R.id.lecturer);
-        day = (TextView)findViewById(R.id.day_in_week);
-        time = (TextView)findViewById(R.id.hours);
+        courseName = findViewById(R.id.course_the_name);
+        courseNumnber =findViewById(R.id.number_of_course);
+        semester = findViewById(R.id.num_of_semester);
+        lecturer = findViewById(R.id.lecturer);
+        day = findViewById(R.id.day_in_week);
+        time = findViewById(R.id.hours);
     }
 
     private void setUI(){
-       course = new Course(10143,"Assembly",
-               "Mr.Adi Malach",Course.Semester.FIRST,
-               Course.Day.MONDAY,
-               new Time("10","32"),new Time("13","00"));
-
        courseName.setText(course.getCourseName());
-       courseNumnber.setText(course.getCourseNumber());
+       courseNumnber.setText(String.valueOf(course.getCourseNumber()));
        semester.setText(course.getSemester().name());
        lecturer.setText(course.getLecture());
        day.setText(course.getDay().name());
-       time.setText(course.getStartTime() + "-" +course.getEndTime());
+       time.setText(course.getStartTime().toString() + "-" +course.getEndTime().toString());
     }
 
 
