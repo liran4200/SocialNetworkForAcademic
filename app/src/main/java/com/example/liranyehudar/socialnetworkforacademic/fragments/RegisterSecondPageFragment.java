@@ -1,6 +1,5 @@
 package com.example.liranyehudar.socialnetworkforacademic.fragments;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,20 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
 import com.example.liranyehudar.socialnetworkforacademic.Interface.Communicator;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RegisterSecondPageFragment extends Fragment {
 
     private Communicator communicator;
-    private EditText editPassword;
-    private EditText editConfirmPass;
+    private EditText edtCountry;
+    private EditText edtCity;
     private Button nextButton;
     private Student student;
 
@@ -48,22 +42,17 @@ public class RegisterSecondPageFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String password = editPassword.getText().toString();
-                String confirmPass = editConfirmPass.getText().toString();
-                if(passwordValidation(password,confirmPass)) { // validation password
-                    // miss encryption password and set student object
+                communicator.update();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                Fragment fragment = new RegisterThirdPageFragment();
+                Bundle parameters = new Bundle();
+                parameters.putSerializable("student",student);
+                fragment.setArguments(parameters);
+                fragmentTransaction.replace(R.id.fragments_container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 
-                    communicator.update();
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    Fragment fragment = new RegisterThirdPageFragment();
-                    Bundle parameters = new Bundle();
-                    parameters.putSerializable("student",student);
-                    fragment.setArguments(parameters);
-                    fragmentTransaction.replace(R.id.fragments_container, fragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
             }
         });
         return view;
@@ -71,22 +60,8 @@ public class RegisterSecondPageFragment extends Fragment {
 
     private void bindUI(View view) {
         nextButton = view.findViewById(R.id.btn_next_to_third);
-        editPassword = view.findViewById(R.id.edit_password);
-        editConfirmPass = view.findViewById(R.id.edit_confirm_password);
-    }
-
-    private boolean passwordValidation(String password,String confirmPass) {
-        if(password.length() == 0 || confirmPass.length() == 0){
-            Toast.makeText(getActivity().getApplicationContext(),"Please fill all fields",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        if(!password.equals(confirmPass)){
-            Toast.makeText(getActivity().getApplicationContext(),"Passwords do not match,try again",Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        return true;
+        edtCountry = view.findViewById(R.id.edt_country);
+        edtCity = view.findViewById(R.id.edt_city);
     }
 
 }

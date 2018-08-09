@@ -6,19 +6,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ProgressBar;
-
 import com.example.liranyehudar.socialnetworkforacademic.Interface.Communicator;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterFirstPageFragment;
-import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterFourthPageFragment;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterThirdPageFragment;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
-import com.facebook.login.LoginManager;
 
 
 public class RegistrationProccessActivity extends AppCompatActivity implements Communicator {
@@ -46,30 +39,18 @@ public class RegistrationProccessActivity extends AppCompatActivity implements C
                 currentProgress = PROGRESS_CHUNCK*3;
                 progressBar.setProgress(currentProgress);
                 Student student =(Student)getIntent().getSerializableExtra("student");
-                Bundle args = new Bundle();
-                args.putSerializable("student",student);
                 currentFragment = new RegisterThirdPageFragment();
-                currentFragment.setArguments(args);
-                fragmentTransaction.add(R.id.fragments_container,currentFragment, "Third");
-                fragmentTransaction.commit();
+                addFragment(student);
                 break;
             }
             case RegistrationTypes.BY_NEW_ACCOUNT:{
                 Student student = new Student();
-                Bundle args = new Bundle();
-                args.putSerializable("student",student);
                 currentFragment = new RegisterFirstPageFragment();
-                currentFragment.setArguments(args);
-                fragmentTransaction.add(R.id.fragments_container,currentFragment, "first");
-                fragmentTransaction.commit();
+                addFragment(student);
                 break;
             }
         }
 
-    }
-
-    private void bindUI() {
-        progressBar = findViewById(R.id.progress_bar);
     }
 
     @Override
@@ -92,5 +73,17 @@ public class RegistrationProccessActivity extends AppCompatActivity implements C
     public void update() {
         currentProgress+=PROGRESS_CHUNCK;
         progressBar.setProgress(currentProgress);
+    }
+
+    private void bindUI() {
+        progressBar = findViewById(R.id.progress_bar);
+    }
+
+    private void addFragment(Student student) {
+        Bundle args = new Bundle();
+        args.putSerializable("student",student);
+        currentFragment.setArguments(args);
+        fragmentTransaction.add(R.id.fragments_container,currentFragment);
+        fragmentTransaction.commit();
     }
 }
