@@ -1,8 +1,8 @@
 package com.example.liranyehudar.socialnetworkforacademic.fragments;
 
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.activities.MainActivity;
@@ -19,6 +20,12 @@ import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterCoursesSelection;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Time;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,6 +40,7 @@ public class RegisterFourthPageFragment extends Fragment {
     private RecycleViewAdapterCoursesSelection selectionAdapter;
     private Button btnSubmit;
 
+    private FirebaseAuth firebaseAuth;
     private Student student;
 
     public RegisterFourthPageFragment() {
@@ -46,7 +54,7 @@ public class RegisterFourthPageFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_register_fourth_page, container, false);
         bindUI(view);
-
+        firebaseAuth = FirebaseAuth.getInstance();
         student = (Student) this.getArguments().getSerializable("student");
 
         final HashSet<Course> selectedCourses = new HashSet<>();
@@ -59,10 +67,22 @@ public class RegisterFourthPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("courses",selectedCourses.toString());
-                // go to feed page.
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra("student",student);
-                startActivity(intent);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    for (UserInfo profile : user.getProviderData()) {
+                        // Id of the provider (ex: google.com)
+                        String providerId = profile.getProviderId();
+                        if(providerId.equals("facebook.com")){
+                            Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                            intent.putExtra("student",student);
+                            startActivity(intent);
+                        }
+                    }
+                    //register user.
+                    registerUser();
+                }
+
+
             }
         });
 
@@ -110,5 +130,23 @@ public class RegisterFourthPageFragment extends Fragment {
                 Course.Day.MONDAY,
                 new Time("09","00"),new Time("11","30")));
         return list;
+    }
+
+    public void registerUser() {
+        firebaseAuth.createUserWithEmailAndPassword("aa@gmail.com","111111").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(Task<AuthResult> task) {
+                if(task.isSuccessful() ) {
+                    Toast.makeText(getActivity().getApplicationContext(),"sucess", Toast.LENGTH_LONG);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.putExtra("student",student);
+                    startActivity(intent);
+                }
+                else{
+                    //handle error
+                    Toast.makeText(getActivity().getApplicationContext(),"error", Toast.LENGTH_LONG);
+                }
+            }
+        });
     }
 }

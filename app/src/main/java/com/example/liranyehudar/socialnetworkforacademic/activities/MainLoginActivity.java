@@ -1,6 +1,7 @@
 package com.example.liranyehudar.socialnetworkforacademic.activities;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,14 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,11 +66,21 @@ public class MainLoginActivity extends AppCompatActivity{
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),CourseActivity.class);
-                startActivity(intent);
+                authLogin();
             }
         });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser != null) {
+           // Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+           // startActivity(intent);
+        }
     }
 
     @Override
@@ -81,35 +99,21 @@ public class MainLoginActivity extends AppCompatActivity{
         if(AccessToken.getCurrentAccessToken() != null) {
             // go to feed activity.
             Toast.makeText(this,"Feed Activity",Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
         }
 
         loginButton.setReadPermissions("email");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                String userId = loginResult.getAccessToken().getUserId();
                 // check if already regiter user, if he register user go to feed activty,
                 // else go to register activity to continue register from third page.
 
                 // case 1: go to feed activty
-
+                handleFacebookAccessToken(loginResult.getAccessToken());
                 // case 2: continue register.
-                GraphRequest graphRequest = GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                Student student = getData(object);
-                                Intent intent = new Intent(getApplicationContext(), RegistrationProccessActivity.class);
-                                intent.putExtra("calling-by",RegistrationTypes.BY_FACEBOOK);
-                                intent.putExtra("student",student);
-                                startActivity(intent);
-                            }
-                        });
 
-                Bundle parameters = new Bundle();
-                parameters.putString("fields","id,first_name,last_name,email,picture.type(normal)");
-                graphRequest.setParameters(parameters);
-                graphRequest.executeAsync();
             }
 
             @Override
@@ -163,5 +167,83 @@ public class MainLoginActivity extends AppCompatActivity{
 
             }
         }).executeAsync();
+    }
+
+    public void authLogin() {
+        String email = edtEmail.getText().toString();
+        String pass =  edtPassword.getText().toString();
+        if(email.length() == 0 || pass.length() == 0) {
+            Toast.makeText(getApplicationContext(),"Please fill all the fields",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        firebaseAuth.signInWithEmailAndPassword(email,pass).
+                addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(Task<AuthResult> task) {
+                if(task.isSuccessful()) {
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(intent);
+                }else{
+                    //handle error
+                    Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                    Log.e("err",task.getException().getMessage());
+                }
+            }
+        });
+    }
+
+    private void handleFacebookAccessToken(final AccessToken token) {
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().getAdditionalUserInfo().isNewUser()) {
+                                //registaration
+                                //loadUserDataFromFacebook(token);
+                                Student student = new Student();
+                                Intent intent = new Intent(getApplicationContext(), RegistrationProccessActivity.class);
+                                intent.putExtra("calling-by",RegistrationTypes.BY_FACEBOOK);
+                                intent.putExtra("student",student);
+                                startActivity(intent);
+                            }
+                            else {
+                                Log.d("msg", "signInWithCredential:success");
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                        else{
+
+                                // If sign in fails, display a message to the user.
+                                Log.w("err", "signInWithCredential:failure", task.getException());
+                                Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+    }
+
+    private void loadUserDataFromFacebook(AccessToken token) {
+        GraphRequest graphRequest = GraphRequest.newMeRequest(
+                token, new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Student student = getData(object);
+                        Intent intent = new Intent(getApplicationContext(), RegistrationProccessActivity.class);
+                        intent.putExtra("calling-by",RegistrationTypes.BY_FACEBOOK);
+                        intent.putExtra("student",student);
+                        startActivity(intent);
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields","id,first_name,last_name,email,picture.type(normal)");
+        graphRequest.setParameters(parameters);
+        graphRequest.executeAsync();
+
     }
 }
