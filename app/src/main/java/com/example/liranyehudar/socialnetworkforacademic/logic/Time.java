@@ -1,9 +1,9 @@
 package com.example.liranyehudar.socialnetworkforacademic.logic;
 
-import android.support.annotation.NonNull;
-
+import com.google.firebase.database.IgnoreExtraProperties;
 import java.util.Objects;
 
+@IgnoreExtraProperties
 public class Time implements Comparable<Time> {
 
     private String hour;

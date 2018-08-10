@@ -21,20 +21,14 @@ public class Student implements Serializable{
 
     }
 
-    public void setCountry(String country) {
+    public Student(String firstName, String lastName, String field, String academic, String year, String country, String city) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.field = field;
+        this.academic = academic;
+        this.year = year;
         this.country = country;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCity(String city) {
         this.city = city;
-    }
-
-    public String getCity() {
-        return city;
     }
 
     public String getFirstName() {
@@ -53,29 +47,44 @@ public class Student implements Serializable{
         this.lastName = lastName;
     }
 
-
-    public String getFieldOfStudy() {
+    public String getField() {
         return field;
     }
 
-    public void setFieldOfStudy(String fieldOfStudy) {
-        this.field = fieldOfStudy;
+    public void setField(String field) {
+        this.field = field;
     }
 
-    public String getAcademicInstitution() {
+    public String getAcademic() {
         return academic;
     }
 
-    public void setAcademicInstitution(String academicInstitution) {
-        this.academic = academicInstitution;
+    public void setAcademic(String academic) {
+        this.academic = academic;
     }
 
-    public String getStudiesYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setStudiesYear(String studiesYear) {
-        this.year = studiesYear;
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     @Override
@@ -86,6 +95,6 @@ public class Student implements Serializable{
 
     @Override
     public String toString() {
-        return super.toString();
+        return firstName+" "+lastName+" from" +city+","+country+" "+year+" "+field+" in "+academic;
     }
 }

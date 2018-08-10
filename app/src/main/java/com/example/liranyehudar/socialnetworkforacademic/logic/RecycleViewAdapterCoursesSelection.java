@@ -73,7 +73,7 @@ public class RecycleViewAdapterCoursesSelection extends RecyclerView.Adapter<Rec
     private String isOverLappingToSelectedCourses(Course c) {
         for(Course course: setSelected) {
             if(course.isOverLapping(c))
-                return course.getCourseName();
+                return course.getName();
         }
         return "";
     }

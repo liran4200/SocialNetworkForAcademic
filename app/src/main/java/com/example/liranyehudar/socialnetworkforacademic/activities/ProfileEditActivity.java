@@ -54,7 +54,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private int skillSize;
     private String [] allSkills;
     private String [] fullName;
-    private Student student;
+    public  Student student;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase database;
     private DatabaseReference ref;
@@ -67,7 +67,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         init();
         readFromDB();
         if(source == RegistrationTypes.FR0M_PROFILE) {
-            updateUI();
+          //  updateUI();
         }
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -115,17 +115,16 @@ public class ProfileEditActivity extends AppCompatActivity {
     private void readFromDB() {
         firebaseAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        ref =  database.getReference("Students");
         String userid = firebaseAuth.getUid();
+        ref =  database.getReference("Students"+"/"+userid);
+
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    student = childSnapshot.getValue(Student.class);
-                }
-                updateUI();
+                student = dataSnapshot.getValue(Student.class);
                 Log.d("student",student.toString());
+                updateUI(dataSnapshot);
             }
 
             @Override
@@ -214,11 +213,31 @@ public class ProfileEditActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.btn_save);
     }
 
-    private void updateUI() {
-        nameEdit.setText(student.getFirstName()+" "+ student.getLastName());
-        cityEdit.setText(student.getCity()+", "+student.getCountry());
-        educationEdit.setText(student.getAcademicInstitution());
-        yearEdit.setText(student.getStudiesYear());
+    public void updateUI(DataSnapshot ds) {
+        try {
+            String fullname = ds.child("firstName").getValue().toString() + ds.child("lastName").getValue();
+            String city = ds.child("city").getValue().toString();
+            String country = ds.child("country").getValue().toString();
+            String academic = ds.child("academic").getValue().toString();
+            String year = ds.child("year").getValue().toString();
+
+//            nameEdit.setText(student.getFirstName()+" "+student.getLastName());
+//            cityEdit.setText(student.getCity());
+//            countryEdit.setText(student.getCountry());
+//            educationEdit.setText(student.getAcademicInstitution() + ","+student.getFieldOfStudy());
+//            yearEdit.setText(student.getStudiesYear());
+
+            nameEdit.setText(fullname);
+            cityEdit.setText(city);
+            countryEdit.setText(country);
+            educationEdit.setText(academic);
+            yearEdit.setText(year);
+
+        }
+        catch (Exception e) {
+            Log.e("err",e.getMessage());
+        }
+       // yearEdit.setText(ds.child("year").getValue(Student.class).getStudiesYear());
     }
 
 }
