@@ -38,7 +38,7 @@ public class RegistrationProccessActivity extends AppCompatActivity implements C
             case RegistrationTypes.BY_FACEBOOK: {
                 currentProgress = PROGRESS_CHUNCK*3;
                 progressBar.setProgress(currentProgress);
-                Student student =(Student)getIntent().getSerializableExtra("student");
+                Student student = new Student();
                 currentFragment = new RegisterThirdPageFragment();
                 addFragment(student);
                 break;

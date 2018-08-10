@@ -39,15 +39,22 @@ public class RegisterSecondPageFragment extends Fragment {
         View view  = inflater.inflate(R.layout.fragment_register_second_page, container, false);
         bindUI(view);
         student = (Student) this.getArguments().getSerializable("student");
+        final String pass = (String) this.getArguments().get("password");
+        final String email = (String) this.getArguments().get("email");
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                student.setCity(edtCity.getText().toString());
+                student.setCountry(edtCountry.getText().toString());
+
                 communicator.update();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Fragment fragment = new RegisterThirdPageFragment();
                 Bundle parameters = new Bundle();
                 parameters.putSerializable("student",student);
+                parameters.putString("password",pass);
+                parameters.putString("email",email);
                 fragment.setArguments(parameters);
                 fragmentTransaction.replace(R.id.fragments_container, fragment);
                 fragmentTransaction.addToBackStack(null);
@@ -57,7 +64,6 @@ public class RegisterSecondPageFragment extends Fragment {
         });
         return view;
     }
-
     private void bindUI(View view) {
         nextButton = view.findViewById(R.id.btn_next_to_third);
         edtCountry = view.findViewById(R.id.edt_country);

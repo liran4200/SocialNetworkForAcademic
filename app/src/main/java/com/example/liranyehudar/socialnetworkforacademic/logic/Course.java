@@ -7,6 +7,7 @@ import java.util.Objects;
 @IgnoreExtraProperties
 public class Course {
 
+    private String key;
     private String number;
     private String name;
     private String lecture;
@@ -17,6 +18,14 @@ public class Course {
 
     public Course() {
 
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public Course(String number, String name, String lecture, String semester, String day, Time startTime, Time endTime) {

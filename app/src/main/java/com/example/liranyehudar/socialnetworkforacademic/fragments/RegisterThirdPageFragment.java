@@ -61,6 +61,9 @@ public class RegisterThirdPageFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_register_third_page, container, false);
         bindUI(view);
         student = (Student) this.getArguments().getSerializable("student");
+        final String pass = (String) this.getArguments().get("password");
+        final String email = (String) this.getArguments().get("email");
+
         ArrayList<String> listAcademic = new ArrayList<String>(Arrays.asList(academic));
         initSpinner(listAcademic , spinnerAcademicInstitution);
 
@@ -84,6 +87,8 @@ public class RegisterThirdPageFragment extends Fragment {
                 Fragment fragment = new RegisterFourthPageFragment();
                 Bundle parameters = new Bundle();
                 parameters.putSerializable("student",student);
+                parameters.putString("password",pass);
+                parameters.putString("email",email);
                 fragment.setArguments(parameters);
                 fragmentTransaction.replace(R.id.fragments_container, fragment);
                 fragmentTransaction.addToBackStack(null);
