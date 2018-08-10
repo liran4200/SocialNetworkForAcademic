@@ -37,15 +37,15 @@ public class CourseActivity extends AppCompatActivity {
     }
 
     private void setUI(){
-       course = new Course(10143,"Assembly",
-               "Mr.Adi Malach",Course.Semester.FIRST,
-               Course.Day.MONDAY,
+       course = new Course("10143","Assembly",
+               "Mr.Adi Malach","First",
+               "MONDAY",
                new Time("10","32"),new Time("13","00"));
-        courseName.setText(course.getCourseName());
-        courseNumnber.setText(course.getCourseNumber()+"");
-        semester.setText(course.getSemester().name());
+        courseName.setText(course.getName());
+        courseNumnber.setText(course.getNumber());
+        semester.setText(course.getSemester());
         lecturer.setText(course.getLecture());
-        day.setText(course.getDay().name());
+        day.setText(course.getDay());
         time.setText(course.getStartTime() + "-" + course.getEndTime());
     }
 

@@ -75,9 +75,9 @@ public class RegisterThirdPageFragment extends Fragment {
             public void onClick(View v) {
                 communicator.update();
 
-                student.setAcademicInstitution(spinnerAcademicInstitution.getSelectedItem().toString());
-                student.setStudiesYear(spinnerYears.getSelectedItem().toString());
-                student.setFieldOfStudy(spinnerStudies.getSelectedItem().toString());
+                student.setAcademic(spinnerAcademicInstitution.getSelectedItem().toString());
+                student.setYear(spinnerYears.getSelectedItem().toString());
+                student.setField(spinnerStudies.getSelectedItem().toString());
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
@@ -26,6 +28,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,10 +46,16 @@ public class RegisterFourthPageFragment extends Fragment {
     private ArrayList<Course> coursesList;
     private RecycleViewAdapterCoursesSelection selectionAdapter;
     private Button btnSubmit;
+    private View view;
+    private ProgressBar progressBar;
+    private TextView selectCourse;
 
     private FirebaseAuth firebaseAuth;
-    private Student student;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
 
+    private Student student;
+    private HashSet<Course> selectedCourses;
     public RegisterFourthPageFragment() {
         // Required empty public constructor
     }
@@ -52,36 +65,32 @@ public class RegisterFourthPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_register_fourth_page, container, false);
-        bindUI(view);
+        view = inflater.inflate(R.layout.fragment_register_fourth_page, container, false);
+
         firebaseAuth = FirebaseAuth.getInstance();
+        selectedCourses = new HashSet<>();
+        coursesList = new ArrayList<>();
         student = (Student) this.getArguments().getSerializable("student");
 
-        final HashSet<Course> selectedCourses = new HashSet<>();
-        coursesList = getCoursesList();
-        selectionAdapter = new RecycleViewAdapterCoursesSelection(coursesList,selectedCourses,view.getContext());
-        recyclerViewSelectCourses.setAdapter(selectionAdapter);
-        recyclerViewSelectCourses.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        bindUI();
+        loadCourses();
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("courses",selectedCourses.toString());
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    for (UserInfo profile : user.getProviderData()) {
+                for (UserInfo profile : user.getProviderData()) {
                         // Id of the provider (ex: google.com)
-                        String providerId = profile.getProviderId();
-                        if(providerId.equals("facebook.com")){
-                            Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
-                            intent.putExtra("student",student);
-                            startActivity(intent);
-                        }
+                    String providerId = profile.getProviderId();
+                    if(providerId.equals("facebook.com")){
+                        Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+                        intent.putExtra("student",student);
+                        startActivity(intent);
                     }
                     //register user.
                     registerUser();
                 }
-
 
             }
         });
@@ -89,47 +98,46 @@ public class RegisterFourthPageFragment extends Fragment {
         return view;
     }
 
-    private void bindUI(View view) {
+    private void bindUI() {
         recyclerViewSelectCourses = view.findViewById(R.id.recycle_selction);
         btnSubmit = view.findViewById(R.id.btn_submit);
+        progressBar = view.findViewById(R.id.prg_loading_courses);
+        selectCourse = view.findViewById(R.id.txt_select_courses);
     }
 
-    public ArrayList<Course> getCoursesList() {
-        ArrayList list = new ArrayList();
-        list.add(new Course(10144,"Advance Alogrthim",
-                "Dr.Dganit Armon",Course.Semester.FIRST,
-                Course.Day.MONDAY, new Time("10","00"),new Time("12","00")));
+    public void loadCourses() {
+        database = FirebaseDatabase.getInstance();
+        ref =  database.getReference("Courses");
 
-        list.add(new Course(10122,"Data Structure",
-                "Dr.Dganit Armon",Course.Semester.FIRST,
-                Course.Day.SUNDAY,
-                new Time("10","31"),new Time("12","00")));
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                addCourses(dataSnapshot);
+                updateUI();
+            }
 
-        list.add(new Course(10143,"Assembly",
-                "Mr.Adi Malach",Course.Semester.FIRST,
-                Course.Day.MONDAY,
-                new Time("10","32"),new Time("13","00")));
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        list.add(new Course(10140,"Computers Communication",
-                "Dr.Nir ...",Course.Semester.SECOND,
-                Course.Day.MONDAY,
-                new Time("10","00"),new Time("12","00")));
+            }
+        });
+    }
 
-        list.add(new Course(90123,"Lgebra Linarit",
-                "Dr.Hanna Clevner",Course.Semester.SUMMER,
-                Course.Day.MONDAY,
-                new Time("10","00"),new Time("12","00")));
+    private void updateUI() {
+        progressBar.setVisibility(View.INVISIBLE);
+        selectCourse.setVisibility(View.VISIBLE);
+        recyclerViewSelectCourses.setVisibility(View.VISIBLE);
+        selectionAdapter = new RecycleViewAdapterCoursesSelection(coursesList,selectedCourses,view.getContext());
+        recyclerViewSelectCourses.setAdapter(selectionAdapter);
+        recyclerViewSelectCourses.setLayoutManager(new LinearLayoutManager(view.getContext()));
+    }
 
-        list.add(new Course(90111," Hedvar 1",
-                "Dr.Alona muchov",Course.Semester.FIRST,
-                Course.Day.MONDAY,
-                new Time("09","00"),new Time("10","00")));
-
-        list.add(new Course(90111," Hedvar 2",
-                "Dr.Alona muchov",Course.Semester.FIRST,
-                Course.Day.MONDAY,
-                new Time("09","00"),new Time("11","30")));
-        return list;
+    private void addCourses(DataSnapshot dataSnapshot){
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+             Course c = ds.getValue(Course.class);
+             coursesList.add(c);
+             Log.d("course",c.toString());
+        }
     }
 
     public void registerUser() {

@@ -9,6 +9,10 @@ public class Time implements Comparable<Time> {
     private String hour;
     private String minute;
 
+    public Time() {
+
+    }
+
     public Time(String hour, String minute) {
         this.hour = hour;
         this.minute = minute;

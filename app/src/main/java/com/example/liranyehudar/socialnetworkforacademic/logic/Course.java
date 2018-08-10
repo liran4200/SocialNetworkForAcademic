@@ -7,15 +7,11 @@ import java.util.Objects;
 @IgnoreExtraProperties
 public class Course {
 
-    public enum Day {SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY;}
-
-    public enum Semester {FIRST, SECOND, SUMMER;}
-
-    private int number;
+    private String number;
     private String name;
     private String lecture;
-    private Semester semester;
-    private Day day;
+    private String semester;
+    private String day;
     private Time startTime;
     private Time endTime;
 
@@ -23,7 +19,7 @@ public class Course {
 
     }
 
-    public Course(int number, String name, String lecture, Semester semester, Day day, Time startTime, Time endTime) {
+    public Course(String number, String name, String lecture, String semester, String day, Time startTime, Time endTime) {
         this.number = number;
         this.name = name;
         this.lecture = lecture;
@@ -33,11 +29,27 @@ public class Course {
         this.endTime = endTime;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public void setNumber(String number) {
         this.number = number;
     }
 
@@ -57,21 +69,6 @@ public class Course {
         this.lecture = lecture;
     }
 
-    public Semester getSemester() {
-        return semester;
-    }
-
-    public void setSemester(Semester semester) {
-        this.semester = semester;
-    }
-
-    public Day getDay() {
-        return day;
-    }
-
-    public void setDay(Day day) {
-        this.day = day;
-    }
 
     public Time getStartTime() {
         return startTime;
@@ -116,10 +113,10 @@ public class Course {
     }
 
     public boolean isOverLapping(Course c) {
-        if (!semester.name().equals(c.getSemester().name()))
+        if (!semester.equals(c.getSemester()))
             return false;
 
-        if (!day.name().equals(c.getDay().name()))
+        if (!day.equals(c.getDay()))
             return false;
 
         if (c.getEndTime().compareTo(startTime) <= 0)
@@ -136,11 +133,11 @@ public class Course {
     }
 
     public String description() {
-        return semester.name() + " semester, " + lecture;
+        return semester + " semester, " + lecture;
     }
 
     public String takesPlaceOn() {
-        return startTime + "-" + endTime + ", " + day.name();
+        return startTime + "-" + endTime + ", " + day;
     }
 
 }

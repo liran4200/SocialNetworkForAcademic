@@ -53,39 +53,15 @@ public class CoursesFragment extends Fragment {
 
     public ArrayList<Course> getCoursesList() {
         ArrayList list = new ArrayList();
-        list.add(new Course(10144,"Advance Alogrthim",
-                "Dr.Dganit Armon",Course.Semester.FIRST,
-                Course.Day.MONDAY, new Time("10","00"),new Time("12","00")));
+        list.add(new Course("10144","Advance Alogrthim",
+                "Dr.Dganit Armon","FIRST",
+                "MONDAY", new Time("10","00"),new Time("12","00")));
 
-        list.add(new Course(10122,"Data Structure",
-                "Dr.Dganit Armon",Course.Semester.FIRST,
-                Course.Day.SUNDAY,
+        list.add(new Course("10122","Data Structure",
+                "Dr.Dganit Armon","FIRST",
+                "SUNDAY",
                 new Time("10","31"),new Time("12","00")));
 
-        list.add(new Course(10143,"Assembly",
-                "Mr.Adi Malach",Course.Semester.FIRST,
-                Course.Day.MONDAY,
-                new Time("10","32"),new Time("13","00")));
-
-        list.add(new Course(10140,"Computers Communication",
-                "Dr.Nir ...",Course.Semester.SECOND,
-                Course.Day.MONDAY,
-                new Time("10","00"),new Time("12","00")));
-
-        list.add(new Course(90123,"Lgebra Linarit",
-                "Dr.Hanna Clevner",Course.Semester.SUMMER,
-                Course.Day.MONDAY,
-                new Time("10","00"),new Time("12","00")));
-
-        list.add(new Course(90111," Hedvar 1",
-                "Dr.Alona muchov",Course.Semester.FIRST,
-                Course.Day.MONDAY,
-                new Time("09","00"),new Time("10","00")));
-
-        list.add(new Course(90111," Hedvar 2",
-                "Dr.Alona muchov",Course.Semester.FIRST,
-                Course.Day.MONDAY,
-                new Time("09","00"),new Time("11","30")));
         return list;
     }
 

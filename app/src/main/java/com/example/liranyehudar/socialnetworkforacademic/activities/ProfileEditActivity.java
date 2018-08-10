@@ -97,8 +97,8 @@ public class ProfileEditActivity extends AppCompatActivity {
                     student.setLastName(fullName[1]);
                     student.setCountry(country);
                     student.setCity(city);
-                    student.setAcademicInstitution(education);
-                    student.setStudiesYear(year);
+                   // student.setAcademicInstitution(education);
+                   // student.setStudiesYear(year);
                    // student.setSkills(skills);
                     Intent i = new Intent(getBaseContext(),ProfileActivity.class);
                     i.putExtra(STUDENT,student);
