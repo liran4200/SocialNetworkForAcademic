@@ -31,6 +31,10 @@ public class Course {
         StudentsId = studentsId;
     }
 
+    public boolean isRegisteredStudent(String studentId) {
+        return StudentsId.containsKey(studentId);
+    }
+
     public void addStudentId(String id) {
         StudentsId.put(id,true);
     }

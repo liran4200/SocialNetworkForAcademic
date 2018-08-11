@@ -167,7 +167,7 @@ public class MainLoginActivity extends AppCompatActivity{
                 if(task.isSuccessful()) {
                     //mainactivty
                     progressDialog.cancel();
-                    Intent intent = new Intent(getApplicationContext(),ProfileEditActivity.class);
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(intent);
                 }else{
                     //handle error
