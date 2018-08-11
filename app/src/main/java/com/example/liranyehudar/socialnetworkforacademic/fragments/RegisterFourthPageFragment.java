@@ -1,5 +1,6 @@
 package com.example.liranyehudar.socialnetworkforacademic.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -59,6 +60,7 @@ public class RegisterFourthPageFragment extends Fragment {
     private Button btnSubmit;
     private View view;
     private ProgressBar progressBar;
+    private ProgressDialog progressDialog;
     private TextView selectCourse;
 
     private FirebaseAuth firebaseAuth;
@@ -100,6 +102,10 @@ public class RegisterFourthPageFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog = new ProgressDialog(view.getContext());
+                progressDialog.setTitle("Finish");
+                progressDialog.setMessage("Creating an account");
+                progressDialog.show();
                 Log.d("courses",selectedCourses.toString());
                 setStudentCourses();
                 if(provider == RegistrationTypes.BY_NEW_ACCOUNT){ // firebase provider
@@ -169,7 +175,7 @@ public class RegisterFourthPageFragment extends Fragment {
             @Override
             public void onComplete(Task<AuthResult> task) {
                 if(task.isSuccessful() ) {
-                    writeStudent();
+                    writeData();
                 }
                 else{
                     //handle error
@@ -179,13 +185,22 @@ public class RegisterFourthPageFragment extends Fragment {
         });
     }
 
-    public void writeStudent() {
+    public void writeData() {
         database = FirebaseDatabase.getInstance();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        DatabaseReference mRef =  database.getReference().child("Students").child(userId);
-        mRef.setValue(student);
+        DatabaseReference studentRef =  database.getReference().child("Students").child(userId);
+        studentRef.setValue(student);
 
+        DatabaseReference courseRef;
+        // join student to courses selected.
+        for(Course c : selectedCourses) {
+            courseRef = database.getReference().child("Courses").child(c.getKey()).child("StudentsId");
+            c.addStudentId(userId);
+            courseRef.setValue(c.getStudentsId());
+        }
+
+        progressDialog.cancel();
         Toast.makeText(getActivity().getApplicationContext(),"sucess", Toast.LENGTH_LONG);
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.putExtra("student",student);
@@ -198,7 +213,7 @@ public class RegisterFourthPageFragment extends Fragment {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         setStudentDetails(object);
-                        writeStudent();
+                        writeData();
                     }
                 });
 

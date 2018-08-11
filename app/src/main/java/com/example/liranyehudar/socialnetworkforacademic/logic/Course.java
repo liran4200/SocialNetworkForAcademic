@@ -2,6 +2,8 @@ package com.example.liranyehudar.socialnetworkforacademic.logic;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @IgnoreExtraProperties
@@ -15,9 +17,22 @@ public class Course {
     private String day;
     private Time startTime;
     private Time endTime;
+    private Map<String,Boolean> StudentsId = new HashMap<>();
 
     public Course() {
 
+    }
+
+    public Map<String, Boolean> getStudentsId() {
+        return StudentsId;
+    }
+
+    public void setStudentsId(Map<String, Boolean> studentsId) {
+        StudentsId = studentsId;
+    }
+
+    public void addStudentId(String id) {
+        StudentsId.put(id,true);
     }
 
     public String getKey() {
@@ -28,7 +43,13 @@ public class Course {
         this.key = key;
     }
 
-    public Course(String number, String name, String lecture, String semester, String day, Time startTime, Time endTime) {
+    @Override
+    public int hashCode() {
+        return Objects.hash(key,number);
+    }
+
+    public Course(String key, String number, String name, String lecture, String semester, String day, Time startTime, Time endTime) {
+        this.key = key;
         this.number = number;
         this.name = name;
         this.lecture = lecture;
@@ -103,10 +124,6 @@ public class Course {
         return number == course.number;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(number);
-    }
 
     @Override
     public String toString() {

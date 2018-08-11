@@ -53,15 +53,6 @@ public class CoursesFragment extends Fragment {
 
     public ArrayList<Course> getCoursesList() {
         ArrayList list = new ArrayList();
-        list.add(new Course("10144","Advance Alogrthim",
-                "Dr.Dganit Armon","FIRST",
-                "MONDAY", new Time("10","00"),new Time("12","00")));
-
-        list.add(new Course("10122","Data Structure",
-                "Dr.Dganit Armon","FIRST",
-                "SUNDAY",
-                new Time("10","31"),new Time("12","00")));
-
         return list;
     }
 

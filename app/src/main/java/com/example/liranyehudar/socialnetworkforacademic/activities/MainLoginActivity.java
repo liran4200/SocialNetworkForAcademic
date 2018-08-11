@@ -1,5 +1,6 @@
 package com.example.liranyehudar.socialnetworkforacademic.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class MainLoginActivity extends AppCompatActivity{
     private Button btnCreateAccount;
     private EditText edtEmail;
     private EditText edtPassword;
+    private ProgressDialog progressDialog;
 
     private CallbackManager callbackManager;
     private FirebaseAuth firebaseAuth;
@@ -49,6 +51,9 @@ public class MainLoginActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main_login);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Login");
+        progressDialog.setMessage("Please wait, login...");
         bindUI();
         loginWithFacebook();
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
@@ -154,18 +159,21 @@ public class MainLoginActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(),"Please fill all the fields",Toast.LENGTH_SHORT).show();
             return;
         }
+        progressDialog.show();
         firebaseAuth.signInWithEmailAndPassword(email,pass).
                 addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     //mainactivty
+                    progressDialog.cancel();
                     Intent intent = new Intent(getApplicationContext(),ProfileEditActivity.class);
                     startActivity(intent);
                 }else{
                     //handle error
                     Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_LONG).show();
                     Log.e("err",task.getException().getMessage());
+                    progressDialog.cancel();
                 }
             }
         });

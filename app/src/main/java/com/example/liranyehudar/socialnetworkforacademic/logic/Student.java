@@ -3,6 +3,7 @@ package com.example.liranyehudar.socialnetworkforacademic.logic;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
@@ -13,7 +14,7 @@ public class Student implements Serializable{
     private String field;
     private String academic;
     private String year;
-    private Map<String,Boolean> CoursesId;
+    private Map<String,Boolean> CoursesId = new HashMap<>();
     //private String profileImageUrl;
     //private String skills;
     private String country;
@@ -26,6 +27,7 @@ public class Student implements Serializable{
     public Map<String, Boolean> getCoursesId() {
         return CoursesId;
     }
+
 
     public void setCoursesId(Map<String, Boolean> coursesId) {
         CoursesId = coursesId;
