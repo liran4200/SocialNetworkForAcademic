@@ -35,13 +35,66 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout_search_categori"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="49dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+
+            <RadioButton
+                android:id="@+id/rdio_student_name"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:id="@+id/txt_student_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Student name"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <RelativeLayout
+        android:layout_below="@+id/linearLayout_search_categori"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-            <android.support.v7.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycle_search"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+        <ProgressBar
+            android:id="@+id/prg_loading_students"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="107dp"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="27dp"
+            android:text="No Result"
+            android:textSize="20sp"
+            android:visibility="invisible" />
+
     </RelativeLayout>
 
 
