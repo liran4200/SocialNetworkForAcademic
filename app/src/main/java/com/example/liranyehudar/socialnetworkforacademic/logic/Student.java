@@ -3,6 +3,8 @@ package com.example.liranyehudar.socialnetworkforacademic.logic;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 @IgnoreExtraProperties
 public class Student implements Serializable{
@@ -12,6 +14,7 @@ public class Student implements Serializable{
     private String field;
     private String academic;
     private String year;
+    private Map<String,Boolean> CoursesId = new HashMap<>();
     //private String profileImageUrl;
     private String skills;
     private String country;
@@ -21,20 +24,31 @@ public class Student implements Serializable{
 
     }
 
-    public void setCountry(String country) {
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public Map<String, Boolean> getCoursesId() {
+        return CoursesId;
+    }
+
+
+    public void setCoursesId(Map<String, Boolean> coursesId) {
+        CoursesId = coursesId;
+    }
+
+    public Student(String firstName, String lastName, String field, String academic, String year, String country, String city) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.field = field;
+        this.academic = academic;
+        this.year = year;
         this.country = country;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCity(String city) {
         this.city = city;
-    }
-
-    public String getCity() {
-        return city;
     }
 
     public String getFirstName() {
@@ -53,13 +67,12 @@ public class Student implements Serializable{
         this.lastName = lastName;
     }
 
-
     public String getField() {
         return field;
     }
 
-    public void setField(String fieldOfStudy) {
-        this.field = fieldOfStudy;
+    public void setField(String field) {
+        this.field = field;
     }
 
     public String getAcademic() {
@@ -74,16 +87,24 @@ public class Student implements Serializable{
         return year;
     }
 
-    public void setSkills(String skills) {
-        this.skills = skills;
-    }
-
-    public String getSkills() {
-        return skills;
-    }
-
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     @Override
@@ -94,6 +115,6 @@ public class Student implements Serializable{
 
     @Override
     public String toString() {
-        return super.toString();
+        return firstName+" "+lastName+" from" +city+","+country+" "+year+" "+field+" in "+academic;
     }
 }
