@@ -2,7 +2,6 @@ package com.example.liranyehudar.socialnetworkforacademic.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,14 +21,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
-    final String USER_NAME = "name";
-    final String USER_YEAR = "year";
-    final String USER_COUNTRY = "country";
-    final String USER_EDUCATION = "education";
-    final String USER_CITY = "city";
-    final String USER_SKILLS = "skills";
     final String USER_SKILLS_SIZE = "skillSize";
     final String STUDENT = "student";
+    final String SOURCE = "source";
 
     private EditText nameEdit;
     private EditText yearEdit;
@@ -37,6 +31,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private EditText cityEdit;
     private EditText educationEdit;
     private EditText skillEdit;
+    private EditText fieldEdit;
     private Button saveButton;
     private String name;
     private String year;
@@ -44,30 +39,34 @@ public class ProfileEditActivity extends AppCompatActivity {
     private String country;
     private String education;
     private String skills;
+    private String field;
     private boolean validName;
     private boolean validYear;
     private boolean validCountry;
     private boolean validCity;
     private boolean validEducation;
     private boolean validSkills;
+    private boolean validField;
     private boolean isOk;
     private int skillSize;
     private String [] allSkills;
     private String [] fullName;
-    public  Student student;
+    private Student student;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    private int source = 0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
         // intent
-        int source = 0 ;
+        checkSource();
         init();
-        readFromDB();
         if(source == RegistrationTypes.FR0M_PROFILE) {
-          //  updateUI();
+            updateUIFromProfile();
+        }else{
+            readFromDB();
         }
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -78,14 +77,16 @@ public class ProfileEditActivity extends AppCompatActivity {
                 city = cityEdit.getText().toString().trim();
                 education = educationEdit.getText().toString().trim();
                 year = yearEdit.getText().toString().trim();
+                field = fieldEdit.getText().toString().trim();
                 skills = skillEdit.getText().toString().trim();
 
                 validName = isValidName(name);
                 validCountry = isValidName(country);
                 validCity = isValidName(city);
                 validEducation = isValidName(education);
-                validYear = isValidYear(year);
+                validYear = isValidName(year);
                 validSkills = isValidSkills(skills);
+                validField = isValidName(field);
 
                 isOk = checkAll();
 
@@ -97,9 +98,9 @@ public class ProfileEditActivity extends AppCompatActivity {
                     student.setLastName(fullName[1]);
                     student.setCountry(country);
                     student.setCity(city);
-                   // student.setAcademicInstitution(education);
-                   // student.setStudiesYear(year);
-                   // student.setSkills(skills);
+                    student.setAcademic(education);
+                    student.setYear(year);
+                    student.setSkills(skills);
                     Intent i = new Intent(getBaseContext(),ProfileActivity.class);
                     i.putExtra(STUDENT,student);
                     i.putExtra(USER_SKILLS_SIZE,skillSize);
@@ -112,19 +113,29 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     }
 
+    private void checkSource(){
+        source = getIntent().getIntExtra(SOURCE,0);
+    }
+
+    private void updateUIFromProfile(){
+        student = (Student) getIntent().getSerializableExtra(STUDENT);
+        updateUI();
+        skillEdit.setText(student.getSkills());
+    }
     private void readFromDB() {
         firebaseAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        ref =  database.getReference("Students");
         String userid = firebaseAuth.getUid();
-        ref =  database.getReference("Students"+"/"+userid);
 
-
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                student = dataSnapshot.getValue(Student.class);
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    student = childSnapshot.getValue(Student.class);
+                }
+                updateUI();
                 Log.d("student",student.toString());
-                updateUI(dataSnapshot);
             }
 
             @Override
@@ -135,7 +146,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public boolean checkAll(){
-        if(!validName && !validYear && !validEducation && !validCity && !validCountry&& !validSkills){
+        if(!validName && !validYear && !validEducation && !validCity && !validCountry&& !validSkills && !validField){
             showErrorMessage("You are not finish");
             return false;
         }
@@ -163,6 +174,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
         if(!validSkills){
             showErrorMessage("Please enter your skills");
+            return false;
+        } if(!validField){
+            showErrorMessage("Please enter your field study");
             return false;
         }else{
             return true;
@@ -192,16 +206,6 @@ public class ProfileEditActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean isValidYear(String age){
-        double  checkYear = 0;
-        try{
-            checkYear = Double.parseDouble(age);
-        }
-        catch (Exception e){
-            return false;
-        }
-        return checkYear > 0 && checkYear <= 4;
-    }
 
     public void init(){
         nameEdit = findViewById(R.id.edit_full_name);
@@ -209,35 +213,18 @@ public class ProfileEditActivity extends AppCompatActivity {
         cityEdit = findViewById(R.id.edit_city);
         educationEdit = findViewById(R.id.edit_education);
         yearEdit = findViewById(R.id.edit_the_year);
+        fieldEdit = findViewById(R.id.edit_field);
         skillEdit = findViewById(R.id.edit_skill);
         saveButton = findViewById(R.id.btn_save);
     }
 
-    public void updateUI(DataSnapshot ds) {
-        try {
-            String fullname = ds.child("firstName").getValue().toString() + ds.child("lastName").getValue();
-            String city = ds.child("city").getValue().toString();
-            String country = ds.child("country").getValue().toString();
-            String academic = ds.child("academic").getValue().toString();
-            String year = ds.child("year").getValue().toString();
-
-//            nameEdit.setText(student.getFirstName()+" "+student.getLastName());
-//            cityEdit.setText(student.getCity());
-//            countryEdit.setText(student.getCountry());
-//            educationEdit.setText(student.getAcademicInstitution() + ","+student.getFieldOfStudy());
-//            yearEdit.setText(student.getStudiesYear());
-
-            nameEdit.setText(fullname);
-            cityEdit.setText(city);
-            countryEdit.setText(country);
-            educationEdit.setText(academic);
-            yearEdit.setText(year);
-
-        }
-        catch (Exception e) {
-            Log.e("err",e.getMessage());
-        }
-       // yearEdit.setText(ds.child("year").getValue(Student.class).getStudiesYear());
+    private void updateUI() {
+        nameEdit.setText(student.getFirstName()+" "+ student.getLastName());
+        cityEdit.setText(student.getCity());
+        countryEdit.setText(student.getCountry());
+        educationEdit.setText(student.getAcademic());
+        yearEdit.setText(student.getYear());
+        fieldEdit.setText(student.getField());
     }
 
 }
