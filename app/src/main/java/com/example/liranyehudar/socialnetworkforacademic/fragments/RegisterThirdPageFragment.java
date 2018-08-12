@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,6 @@ import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,9 +72,9 @@ public class RegisterThirdPageFragment extends Fragment {
             public void onClick(View v) {
                 communicator.update();
 
-                student.setAcademicInstitution(spinnerAcademicInstitution.getSelectedItem().toString());
-                student.setStudiesYear(spinnerYears.getSelectedItem().toString());
-                student.setFieldOfStudy(spinnerStudies.getSelectedItem().toString());
+                student.setAcademic(spinnerAcademicInstitution.getSelectedItem().toString());
+                student.setYear(spinnerYears.getSelectedItem().toString());
+                student.setField(spinnerStudies.getSelectedItem().toString());
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

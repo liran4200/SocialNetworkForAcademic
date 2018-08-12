@@ -2,7 +2,6 @@ package com.example.liranyehudar.socialnetworkforacademic.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,12 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileEditActivity extends AppCompatActivity {
 
-    final String USER_NAME = "name";
-    final String USER_YEAR = "year";
-    final String USER_COUNTRY = "country";
-    final String USER_EDUCATION = "education";
-    final String USER_CITY = "city";
-    final String USER_SKILLS = "skills";
     final String USER_SKILLS_SIZE = "skillSize";
     final String STUDENT = "student";
 
@@ -58,12 +51,12 @@ public class ProfileEditActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    private int source = 0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
         // intent
-        int source = 0 ;
         init();
         readFromDB();
         if(source == RegistrationTypes.FR0M_PROFILE) {
@@ -84,7 +77,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 validCountry = isValidName(country);
                 validCity = isValidName(city);
                 validEducation = isValidName(education);
-                validYear = isValidYear(year);
+                validYear = isValidName(year);
                 validSkills = isValidSkills(skills);
 
                 isOk = checkAll();
@@ -97,9 +90,9 @@ public class ProfileEditActivity extends AppCompatActivity {
                     student.setLastName(fullName[1]);
                     student.setCountry(country);
                     student.setCity(city);
-                    student.setAcademicInstitution(education);
-                    student.setStudiesYear(year);
-                   // student.setSkills(skills);
+                    student.setAcademic(education);
+                    student.setYear(year);
+                    student.setSkills(skills);
                     Intent i = new Intent(getBaseContext(),ProfileActivity.class);
                     i.putExtra(STUDENT,student);
                     i.putExtra(USER_SKILLS_SIZE,skillSize);
@@ -118,7 +111,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         ref =  database.getReference("Students");
         String userid = firebaseAuth.getUid();
 
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
@@ -193,16 +186,6 @@ public class ProfileEditActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean isValidYear(String age){
-        double  checkYear = 0;
-        try{
-            checkYear = Double.parseDouble(age);
-        }
-        catch (Exception e){
-            return false;
-        }
-        return checkYear > 0 && checkYear <= 4;
-    }
 
     public void init(){
         nameEdit = findViewById(R.id.edit_full_name);
@@ -216,9 +199,10 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     private void updateUI() {
         nameEdit.setText(student.getFirstName()+" "+ student.getLastName());
-        cityEdit.setText(student.getCity()+", "+student.getCountry());
-        educationEdit.setText(student.getAcademicInstitution());
-        yearEdit.setText(student.getStudiesYear());
+        cityEdit.setText(student.getCity());
+        countryEdit.setText(student.getCountry());
+        educationEdit.setText(student.getAcademic());
+        yearEdit.setText(student.getYear());
     }
 
 }

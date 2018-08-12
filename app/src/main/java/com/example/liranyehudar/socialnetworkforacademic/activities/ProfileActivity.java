@@ -29,7 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     final String USER_SKILLS_SIZE = "skillSize";
     final String STUDENT = "student";
-    final int REQUEST_CAMERA = 1;
+    final String SOURCE = "source";
     final int SELECT_FILE = 0;
 
     private boolean counerRot = false;
@@ -73,6 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this,ProfileEditActivity.class);
                 intent.putExtra(STUDENT,student);
+                intent.putExtra(SOURCE,1002);
                 startActivity(intent);
             }
         });
@@ -120,22 +121,16 @@ public class ProfileActivity extends AppCompatActivity {
         startActivityForResult(i.createChooser(i,"select file"),SELECT_FILE);
     }
 
-    private void cameraIntent(){
-        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(i,REQUEST_CAMERA);
-    }
 
     private void selectImage(){
-        final CharSequence [] items = {"Take Photo","Choose from Library","Cancel"};
+        final CharSequence [] items = {"Choose from Library","Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(items[which].equals("Take Photo")){
-                    cameraIntent();
-                }else if(items[which].equals("Choose from Library")){
+                if(items[which].equals("Choose from Library")){
                     galleryIntent();
                 }else if(items[which].equals("Cancel")){
                     dialog.dismiss();
@@ -149,11 +144,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode,resultCode,data);
 
         if(resultCode == Activity.RESULT_OK){
-            if(requestCode == REQUEST_CAMERA){
-                Bundle bundle = data.getExtras();
-                Bitmap bmp = (Bitmap)bundle.get("data");
-                profileImg.setImageBitmap(bmp);
-            }else if(requestCode == SELECT_FILE){
+            if(requestCode == SELECT_FILE){
                 final CharSequence [] items = {"Is Ok","Inverted picture ","Picture on the right side","Picture on the left side"};
                 Uri selectImage = data.getData();
                 profileImg.setImageURI(selectImage);
@@ -197,10 +188,10 @@ public class ProfileActivity extends AppCompatActivity {
         student = (Student) getIntent().getSerializableExtra(STUDENT);
         name_txt.setText(student.getFirstName() + " " + student.getLastName());;
         country_txt.setText(student.getCity() + ","+student.getCountry());
-        education_txt.setText("Education: "+student.getAcademicInstitution());
-        year_txt.setText("Year: " + student.getStudiesYear());
+        education_txt.setText("Education: "+student.getAcademic());
+        year_txt.setText("Year: " + student.getYear());
         skillsSize = getIntent().getIntExtra(USER_SKILLS_SIZE,-1);
-    //    userSkills = student.getSkills();
+        userSkills = student.getSkills();
     }
 
 

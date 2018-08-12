@@ -13,7 +13,7 @@ public class Student implements Serializable{
     private String academic;
     private String year;
     //private String profileImageUrl;
-    //private String skills;
+    private String skills;
     private String country;
     private String city;
 
@@ -54,28 +54,36 @@ public class Student implements Serializable{
     }
 
 
-    public String getFieldOfStudy() {
+    public String getField() {
         return field;
     }
 
-    public void setFieldOfStudy(String fieldOfStudy) {
+    public void setField(String fieldOfStudy) {
         this.field = fieldOfStudy;
     }
 
-    public String getAcademicInstitution() {
+    public String getAcademic() {
         return academic;
     }
 
-    public void setAcademicInstitution(String academicInstitution) {
-        this.academic = academicInstitution;
+    public void setAcademic(String academic) {
+        this.academic = academic;
     }
 
-    public String getStudiesYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setStudiesYear(String studiesYear) {
-        this.year = studiesYear;
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     @Override
