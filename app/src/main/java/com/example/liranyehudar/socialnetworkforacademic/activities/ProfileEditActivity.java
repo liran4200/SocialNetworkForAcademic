@@ -23,6 +23,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     final String USER_SKILLS_SIZE = "skillSize";
     final String STUDENT = "student";
+    final String SOURCE = "source";
 
     private EditText nameEdit;
     private EditText yearEdit;
@@ -30,6 +31,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private EditText cityEdit;
     private EditText educationEdit;
     private EditText skillEdit;
+    private EditText fieldEdit;
     private Button saveButton;
     private String name;
     private String year;
@@ -37,12 +39,14 @@ public class ProfileEditActivity extends AppCompatActivity {
     private String country;
     private String education;
     private String skills;
+    private String field;
     private boolean validName;
     private boolean validYear;
     private boolean validCountry;
     private boolean validCity;
     private boolean validEducation;
     private boolean validSkills;
+    private boolean validField;
     private boolean isOk;
     private int skillSize;
     private String [] allSkills;
@@ -57,10 +61,12 @@ public class ProfileEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
         // intent
+        checkSource();
         init();
-        readFromDB();
         if(source == RegistrationTypes.FR0M_PROFILE) {
-            updateUI();
+            updateUIFromProfile();
+        }else{
+            readFromDB();
         }
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +77,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 city = cityEdit.getText().toString().trim();
                 education = educationEdit.getText().toString().trim();
                 year = yearEdit.getText().toString().trim();
+                field = fieldEdit.getText().toString().trim();
                 skills = skillEdit.getText().toString().trim();
 
                 validName = isValidName(name);
@@ -79,6 +86,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 validEducation = isValidName(education);
                 validYear = isValidName(year);
                 validSkills = isValidSkills(skills);
+                validField = isValidName(field);
 
                 isOk = checkAll();
 
@@ -105,6 +113,15 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     }
 
+    private void checkSource(){
+        source = getIntent().getIntExtra(SOURCE,0);
+    }
+
+    private void updateUIFromProfile(){
+        student = (Student) getIntent().getSerializableExtra(STUDENT);
+        updateUI();
+        skillEdit.setText(student.getSkills());
+    }
     private void readFromDB() {
         firebaseAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -129,7 +146,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public boolean checkAll(){
-        if(!validName && !validYear && !validEducation && !validCity && !validCountry&& !validSkills){
+        if(!validName && !validYear && !validEducation && !validCity && !validCountry&& !validSkills && !validField){
             showErrorMessage("You are not finish");
             return false;
         }
@@ -157,6 +174,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
         if(!validSkills){
             showErrorMessage("Please enter your skills");
+            return false;
+        } if(!validField){
+            showErrorMessage("Please enter your field study");
             return false;
         }else{
             return true;
@@ -193,6 +213,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         cityEdit = findViewById(R.id.edit_city);
         educationEdit = findViewById(R.id.edit_education);
         yearEdit = findViewById(R.id.edit_the_year);
+        fieldEdit = findViewById(R.id.edit_field);
         skillEdit = findViewById(R.id.edit_skill);
         saveButton = findViewById(R.id.btn_save);
     }
@@ -203,6 +224,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         countryEdit.setText(student.getCountry());
         educationEdit.setText(student.getAcademic());
         yearEdit.setText(student.getYear());
+        fieldEdit.setText(student.getField());
     }
 
 }

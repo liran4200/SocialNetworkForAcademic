@@ -33,10 +33,12 @@ public class ProfileActivity extends AppCompatActivity {
     final int SELECT_FILE = 0;
 
     private boolean counerRot = false;
+    private boolean edit;
     private TextView name_txt;
     private TextView country_txt;
     private TextView education_txt;
     private TextView year_txt;
+    private TextView field_txt;
     private String userSkills;
     private int skillsSize;
     private ImageButton editProfile;
@@ -44,7 +46,6 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView profileImg;
     private ExpandableLayout layout;
     private Student student;
-    private float size;
 
 
 
@@ -63,7 +64,12 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.camera_profile:
-                        selectImage();
+                        if (edit == false){
+                            selectImage();
+                            edit = true;
+                        }else{
+                         editImage();
+                        }
                         break;
                 }
             }
@@ -119,6 +125,28 @@ public class ProfileActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         i.setType("image/*");
         startActivityForResult(i.createChooser(i,"select file"),SELECT_FILE);
+    }
+
+    private void editImage(){
+        final CharSequence [] items = {"Is Ok","Inverted picture ","Picture on the right side","Picture on the left side","Choose from Library"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(items[which].equals("Is Ok")){
+                    dialog.dismiss();
+                }else if(items[which].equals("Inverted picture ")){
+                    profileImg.setRotation(profileImg.getRotation()+ 180);
+                }else if(items[which].equals("Picture on the right side")){
+                    profileImg.setRotation(profileImg.getRotation()+ 90);
+                }else if(items[which].equals("Picture on the left side")){
+                    profileImg.setRotation(profileImg.getRotation()+ 270);
+                }else{
+                    galleryIntent();
+                }
+            }
+        });
+        builder.show();
     }
 
 
@@ -178,6 +206,7 @@ public class ProfileActivity extends AppCompatActivity {
         country_txt = (TextView)findViewById(R.id.city_and_country);
         education_txt = (TextView)findViewById(R.id.textView5);
         year_txt = (TextView)findViewById(R.id.textView9);
+        field_txt = (TextView)findViewById(R.id.textView15);
         editProfile = (ImageButton) findViewById(R.id.imageButton3);
         profileImg = (ImageView)findViewById(R.id.user_profile_image);
         camera = (ImageView)findViewById(R.id.camera_profile);
@@ -190,6 +219,7 @@ public class ProfileActivity extends AppCompatActivity {
         country_txt.setText(student.getCity() + ","+student.getCountry());
         education_txt.setText("Education: "+student.getAcademic());
         year_txt.setText("Year: " + student.getYear());
+        field_txt.setText("Study: "+student.getField());
         skillsSize = getIntent().getIntExtra(USER_SKILLS_SIZE,-1);
         userSkills = student.getSkills();
     }
