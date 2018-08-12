@@ -37,16 +37,7 @@ public class CourseActivity extends AppCompatActivity {
     }
 
     private void setUI(){
-       course = new Course(10143,"Assembly",
-               "Mr.Adi Malach",Course.Semester.FIRST,
-               Course.Day.MONDAY,
-               new Time("10","32"),new Time("13","00"));
-        courseName.setText(course.getCourseName());
-        courseNumnber.setText(course.getCourseNumber()+"");
-        semester.setText(course.getSemester().name());
-        lecturer.setText(course.getLecture());
-        day.setText(course.getDay().name());
-        time.setText(course.getStartTime() + "-" + course.getEndTime());
+
     }
 
 

@@ -1,30 +1,61 @@
 package com.example.liranyehudar.socialnetworkforacademic.logic;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
+@IgnoreExtraProperties
 public class Course {
-    public enum Day {SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY;}
-    public enum Semester {FIRST,SECOND,SUMMER;}
 
-    public static int GEN_ID =1;
-
-    private int id;
-    private int courseNumber;
-
-    private String courseName;
+    private String key;
+    private String number;
+    private String name;
     private String lecture;
-
-    private Semester semester;
-    private Day day;
+    private String semester;
+    private String day;
     private Time startTime;
     private Time endTime;
+    private Map<String,Boolean> StudentsId = new HashMap<>();
 
-    public Course(int courseNumber, String courseName, String lecture,
-                  Semester semester, Day day,Time startTime, Time endTime) {
-        this.id = GEN_ID;
-        this.GEN_ID++;
-        this.courseNumber = courseNumber;
-        this.courseName = courseName;
+    public Course() {
+
+    }
+
+    public Map<String, Boolean> getStudentsId() {
+        return StudentsId;
+    }
+
+    public void setStudentsId(Map<String, Boolean> studentsId) {
+        StudentsId = studentsId;
+    }
+
+    public boolean isRegisteredStudent(String studentId) {
+        return StudentsId.containsKey(studentId);
+    }
+
+    public void addStudentId(String id) {
+        StudentsId.put(id,true);
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key,number);
+    }
+
+    public Course(String key, String number, String name, String lecture, String semester, String day, Time startTime, Time endTime) {
+        this.key = key;
+        this.number = number;
+        this.name = name;
         this.lecture = lecture;
         this.semester = semester;
         this.day = day;
@@ -32,35 +63,36 @@ public class Course {
         this.endTime = endTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Course course = (Course) o;
-        return id == course.id &&
-                courseNumber == course.courseNumber;
+    public String getNumber() {
+        return number;
     }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, courseNumber);
+    public String getSemester() {
+        return semester;
     }
 
-    public int getCourseNumber() {
-        return courseNumber;
+    public void setSemester(String semester) {
+        this.semester = semester;
     }
 
-    public void setCourseNumber(int courseNumber) {
-        this.courseNumber = courseNumber;
+    public String getDay() {
+        return day;
     }
 
-    public String getCourseName() {
-        return courseName;
+    public void setDay(String day) {
+        this.day = day;
     }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLecture() {
@@ -71,64 +103,37 @@ public class Course {
         this.lecture = lecture;
     }
 
-    public Semester getSemester() {
-        return semester;
-    }
-
-    public void setSemester(Semester semester) {
-        this.semester = semester;
-    }
-
-    public Day getDay() {
-        return day;
-    }
-
-    public void setDay(Day day) {
-        this.day = day;
-    }
 
     public Time getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
     }
 
     public Time getEndTime() {
         return endTime;
     }
 
-    public boolean isOverLapping(Course c){
-        if(!semester.name().equals(c.getSemester().name()))
-            return false;
-
-        if(!day.name().equals(c.getDay().name()))
-            return false;
-
-        if(c.getEndTime().compareTo(startTime)<=0)
-            return false;
-
-        if(c.getStartTime().compareTo(endTime)>=0)
-            return false;
-
-        return true;
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
     }
 
-    public String heading() {
-        return courseNumber+"-"+courseName;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return number == course.number;
     }
 
-    public String description() {
-        return semester.name()+" semester, "+lecture;
-    }
-
-    public String takesPlaceOn() {
-        return startTime+"-"+endTime+", "+day.name();
-    }
 
     @Override
     public String toString() {
         return "Course{" +
-                "id=" + id +
-                ", courseNumber=" + courseNumber +
-                ", courseName='" + courseName + '\'' +
+                "number=" + number +
+                ", name='" + name + '\'' +
                 ", lecture='" + lecture + '\'' +
                 ", semester=" + semester +
                 ", day=" + day +
@@ -136,4 +141,34 @@ public class Course {
                 ", endTime=" + endTime +
                 '}';
     }
+
+    public boolean isOverLapping(Course c) {
+        if (!semester.equals(c.getSemester()))
+            return false;
+
+        if (!day.equals(c.getDay()))
+            return false;
+
+        if (c.getEndTime().compareTo(startTime) <= 0)
+            return false;
+
+        if (c.getStartTime().compareTo(endTime) >= 0)
+            return false;
+
+        return true;
+    }
+
+    public String heading() {
+        return number + "-" + name;
+    }
+
+    public String description() {
+        return semester + " semester, " + lecture;
+    }
+
+    public String takesPlaceOn() {
+        return startTime + "-" + endTime + ", " + day;
+    }
+
 }
+

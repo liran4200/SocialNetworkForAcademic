@@ -31,6 +31,7 @@ public class RegisterFirstPageFragment extends Fragment {
     private EditText edtEmail;
     private EditText edtPassword;
     private EditText edtConfirmPass;
+    private Button nextButton;
 
     public RegisterFirstPageFragment() {
         // Required empty public constructor
@@ -49,20 +50,22 @@ public class RegisterFirstPageFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_register_first_page, container, false);
         bindUI(view);
         student = (Student) this.getArguments().getSerializable("student");
-        Button nextButton = view.findViewById(R.id.btn_next);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String email = edtEmail.getText().toString();
                 String pass = edtPassword.getText().toString();
                 String confirmPass = edtConfirmPass.getText().toString();
-                if(passwordValidation(pass,confirmPass)) {
-                    communicator.update();
 
+                if(setStudentValidDetails() && validation(pass,confirmPass,email)) {
+                    communicator.update();
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     Fragment fragment = new RegisterSecondPageFragment();
                     Bundle parameters = new Bundle();
                     parameters.putSerializable("student", student);
+                    parameters.putString("password",pass);
+                    parameters.putString("email",email);
                     fragment.setArguments(parameters);
                     fragmentTransaction.replace(R.id.fragments_container, fragment);
                     fragmentTransaction.addToBackStack(null);
@@ -74,6 +77,35 @@ public class RegisterFirstPageFragment extends Fragment {
         return view;
     }
 
+    private boolean validation(String password,String confirmPass,String email) {
+        if(password.length()==0 || confirmPass.length()== 0 || email.length()== 0){
+            Toast.makeText(getActivity().getApplicationContext(),"Please fill all fields",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if(!emailValidation(email))
+            return false;
+
+        if(!passwordValidation(password,confirmPass))
+            return false;
+
+        return true;
+    }
+
+    private boolean setStudentValidDetails() {
+        String firstName = edtFirstName.getText().toString();
+        String lastName = edtLastName.getText().toString();
+
+        if(firstName.length()==0 || lastName.length()== 0){
+            Toast.makeText(getActivity().getApplicationContext(),"Please fill all fields",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        student.setFirstName(firstName);
+        student.setLastName(lastName);
+
+        return true;
+    }
 
     private void bindUI(View view) {
         edtFirstName = view.findViewById(R.id.edit_first_name);
@@ -81,14 +113,32 @@ public class RegisterFirstPageFragment extends Fragment {
         edtEmail = view.findViewById(R.id.edit_email);
         edtPassword = view.findViewById(R.id.edit_password);
         edtConfirmPass = view.findViewById(R.id.edit_confirm_password);
+        nextButton = view.findViewById(R.id.btn_next);
     }
 
-    private boolean passwordValidation(String password,String confirmPass) {
-        if(password.length() == 0 || confirmPass.length() == 0){
-            Toast.makeText(getActivity().getApplicationContext(),"Please fill all fields",Toast.LENGTH_LONG).show();
+    private boolean emailValidation(String email) {
+        boolean isValid = true;
+        String[] split1 = email.split("@");
+        if(split1.length == 1) {
+            Toast.makeText(getActivity().getApplicationContext(),"Email address is invalid format",Toast.LENGTH_LONG).show();
             return false;
         }
 
+        if(split1[1].length() == 0){
+            Toast.makeText(getActivity().getApplicationContext(),"Email address is invalid format",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        String[] split2 = split1[1].split(".");
+        if (split2.length == 1) {
+            Toast.makeText(getActivity().getApplicationContext(),"Email address is invalid format",Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean passwordValidation(String password,String confirmPass) {
         if(password.length()< MIN_PASS_LENGTH){
             Toast.makeText(getActivity().getApplicationContext(),"You have to enter a passowrd at least 6 letter",Toast.LENGTH_LONG).show();
             return false;

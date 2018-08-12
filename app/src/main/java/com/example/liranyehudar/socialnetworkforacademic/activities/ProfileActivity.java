@@ -47,8 +47,6 @@ public class ProfileActivity extends AppCompatActivity {
     private float size;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,13 +192,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        student = (Student) getIntent().getSerializableExtra(STUDENT);
-        name_txt.setText(student.getFirstName() + " " + student.getLastName());;
-        country_txt.setText(student.getCity() + ","+student.getCountry());
-        education_txt.setText("Education: "+student.getAcademicInstitution());
-        year_txt.setText("Year: " + student.getStudiesYear());
-        skillsSize = getIntent().getIntExtra(USER_SKILLS_SIZE,-1);
-    //    userSkills = student.getSkills();
     }
 
 
