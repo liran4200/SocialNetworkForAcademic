@@ -16,12 +16,20 @@ public class Student implements Serializable{
     private String year;
     private Map<String,Boolean> CoursesId = new HashMap<>();
     //private String profileImageUrl;
-    //private String skills;
+    private String skills;
     private String country;
     private String city;
 
     public Student() {
 
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
     }
 
     public Map<String, Boolean> getCoursesId() {
