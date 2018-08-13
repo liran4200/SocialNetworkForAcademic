@@ -16,10 +16,15 @@ public class Student implements Serializable{
     private String academic;
     private String year;
     private Map<String,Boolean> CoursesId = new HashMap<>();
+    private Map<String,Boolean> PostsId = new HashMap<>();
     //private String profileImageUrl;
     private String skills;
     private String country;
     private String city;
+
+    public Student() {
+
+    }
 
     public String getKey() {
         return key;
@@ -29,8 +34,16 @@ public class Student implements Serializable{
         this.key = key;
     }
 
-    public Student() {
+    public String getFullName() {
+        return firstName +" "+ lastName;
+    }
 
+    public Map<String, Boolean> getPostsId() {
+        return PostsId;
+    }
+
+    public void setPostsId(Map<String, Boolean> postsId) {
+        PostsId = postsId;
     }
 
     public String getSkills() {

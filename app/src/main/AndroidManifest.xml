@@ -46,6 +46,7 @@
         </activity>
         <activity android:name=".activities.RegistrationProccessActivity" />
         <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.SharePostActivty"/>
         <activity
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile"

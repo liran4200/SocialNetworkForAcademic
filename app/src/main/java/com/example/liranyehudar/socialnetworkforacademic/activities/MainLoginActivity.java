@@ -51,6 +51,10 @@ public class MainLoginActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main_login);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        if(firebaseAuth != null) {
+            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
+        }
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Login");
         progressDialog.setMessage("Please wait, login...");
@@ -167,7 +171,7 @@ public class MainLoginActivity extends AppCompatActivity{
                 if(task.isSuccessful()) {
                     //mainactivty
                     progressDialog.cancel();
-                    Intent intent = new Intent(getApplicationContext(),ProfileEditActivity.class);
+                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(intent);
                 }else{
                     //handle error

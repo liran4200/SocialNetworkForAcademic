@@ -1,60 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/scrollView"
+    android:orientation="vertical"
     tools:context=".fragments.HomeFeedFragment">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/layout_post"
+        android:focusedByDefault="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_top_down"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity=""
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:paddingTop="8dp"
+            android:clickable="true"
+            android:src="@drawable/baseline_account_circle_black_24dp"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/txt_post"
+            android:layout_width="200dp"
+            android:layout_height="43dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:hint="What are you thinking..."
+            android:paddingRight="10dp" />
+
+        <TextView
+            android:id="@+id/txtLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log out"
+            android:layout_margin="18dp"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/layout_post"
-            android:focusedByDefault="true"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_top_down"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
-            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/profile_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity=""
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="8dp"
-                android:clickable="true"
-                android:src="@drawable/baseline_account_circle_black_24dp"
-                app:civ_border_color="#FF000000"
-                app:civ_border_width="2dp" />
+            <ProgressBar
+                android:id="@+id/prg_loading_posts"
+                android:visibility="invisible"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true" />
 
             <TextView
-                android:id="@+id/txt_post"
-                android:layout_width="200dp"
-                android:layout_height="43dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/circle"
-                android:gravity="center"
-                android:hint="What are you thinking..."
-                android:paddingRight="10dp" />
+                android:id="@+id/txt_no_posts_found"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="No posts found yet"
+                android:textSize="20sp" />
 
-        </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:visibility="invisible"
+                android:id="@+id/recycleView_posts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycleView_posts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_post" />
+        </RelativeLayout>
 
-    </RelativeLayout>
+    </ScrollView>
 
 
 
-</ScrollView>
+</LinearLayout>

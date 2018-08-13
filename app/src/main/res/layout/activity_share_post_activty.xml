@@ -33,12 +33,12 @@
     </RelativeLayout>
 
     <EditText
+        android:hint="What are you thinking ?"
         android:id="@+id/edt_posting"
-        android:layout_below="@+id/rel_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="What are you thinking about?"
-        android:textSize="17sp"/>
+        android:layout_below="@+id/rel_bar"
+        android:textSize="17sp" />
 
 
 </RelativeLayout>
