@@ -188,7 +188,7 @@ public class RegisterFourthPageFragment extends Fragment {
     public void writeData() {
         database = FirebaseDatabase.getInstance();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+        student.setKey(userId);
         DatabaseReference studentRef =  database.getReference().child("Students").child(userId);
         studentRef.setValue(student);
 

@@ -66,15 +66,16 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_below="@+id/linearLayout_search_categori"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout_search_categori">
 
         <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycle_search"
-                android:visibility="invisible"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            android:id="@+id/recycle_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
 
         <ProgressBar
             android:id="@+id/prg_loading_students"
@@ -86,12 +87,13 @@
             android:visibility="invisible" />
 
         <TextView
+            android:id="@+id/txt_no_found_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="27dp"
-            android:text="No Result"
+            android:layout_marginTop="65dp"
+            android:text="No results found "
             android:textSize="20sp"
             android:visibility="invisible" />
 

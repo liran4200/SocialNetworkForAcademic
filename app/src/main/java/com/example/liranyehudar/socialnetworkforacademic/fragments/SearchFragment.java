@@ -57,14 +57,19 @@ public class SearchFragment extends Fragment {
         view =  inflater.inflate(R.layout.fragment_search, container, false);
         bindUI();
         students = new ArrayList<>();
+        recycleViewAdapterSearching= new RecycleViewAdapterSearching(view.getContext(),students);
+        recyclerView.setAdapter(recycleViewAdapterSearching);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String searchString = edtSearch.getText().toString();
+                String searchString = edtSearch.getText().toString().trim();
                 if(searchString.length()== 0){
                     Toast.makeText(view.getContext(),"Please write on search bar",Toast.LENGTH_SHORT).show();
                     return;
                 }
+                txtNoResult.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
                 loadStudents(searchString);
             }
@@ -77,17 +82,17 @@ public class SearchFragment extends Fragment {
         edtSearch = view.findViewById(R.id.edt_search);
         radioStudentName = view.findViewById(R.id.rdio_student_name);
         recyclerView = view.findViewById(R.id.recycle_search);
-        progressBar = view.findViewById(R.id.prg_loading_courses);
-        txtNoResult = view.findViewById(R.id.txt_)
+        progressBar = view.findViewById(R.id.prg_loading_students);
+        txtNoResult = view.findViewById(R.id.txt_no_found_result);
     }
 
     private void loadStudents(final String searchString) {
-        final String userId = FirebaseAuth.getInstance().getUid();
         database = FirebaseDatabase.getInstance();
         ref =  database.getReference("Students");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                students.clear();
                 addStudents(dataSnapshot,searchString);
                 updateUI();
             }
@@ -100,21 +105,28 @@ public class SearchFragment extends Fragment {
     }
 
     private void addStudents(DataSnapshot dataSnapshot,String searchString) {
+            String userId = FirebaseAuth.getInstance().getUid();
             for(DataSnapshot ds : dataSnapshot.getChildren()){
                 Student s = ds.getValue(Student.class);
-                String fullName = s.getFirstName()+" "+s.getLastName();
-                if(fullName.toLowerCase().contains(searchString.toLowerCase())){
-                    students.add(s);
+                if(!s.getKey().equals(userId)) { //not display the user who search.
+                    String fullName = s.getFirstName() + " " + s.getLastName();
+                    if (fullName.toLowerCase().contains(searchString.toLowerCase())) {
+                        students.add(s);
+                    }
                 }
             }
     }
 
     private void updateUI() {
         progressBar.setVisibility(View.INVISIBLE);
-        recyclerView.setVisibility(View.VISIBLE);
-        recycleViewAdapterSearching= new RecycleViewAdapterSearching(view.getContext(),students);
-        recyclerView.setAdapter(recycleViewAdapterSearching);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        if(students.size() == 0){
+            txtNoResult.setVisibility(View.VISIBLE);
+        }
+        else {
+            recycleViewAdapterSearching.notifyDataSetChanged();
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
     }
 
 }
