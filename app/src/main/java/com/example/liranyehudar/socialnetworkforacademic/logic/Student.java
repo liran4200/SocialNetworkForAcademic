@@ -9,6 +9,7 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class Student implements Serializable{
 
+    private String key;
     private String firstName;
     private String lastName;
     private String field;
@@ -19,6 +20,14 @@ public class Student implements Serializable{
     private String skills;
     private String country;
     private String city;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public Student() {
 
@@ -41,7 +50,8 @@ public class Student implements Serializable{
         CoursesId = coursesId;
     }
 
-    public Student(String firstName, String lastName, String field, String academic, String year, String country, String city) {
+    public Student(String key, String firstName, String lastName, String field, String academic, String year, String country, String city) {
+        this.key = key;
         this.firstName = firstName;
         this.lastName = lastName;
         this.field = field;

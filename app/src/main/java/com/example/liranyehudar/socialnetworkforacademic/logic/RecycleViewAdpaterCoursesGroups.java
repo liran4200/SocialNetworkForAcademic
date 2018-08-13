@@ -74,7 +74,5 @@ public class RecycleViewAdpaterCoursesGroups extends
             imgCourseGroup = itemView.findViewById(R.id.nav_group_course);
             imgMessage = itemView.findViewById(R.id.message_group);
         }
-
-
     }
 }
