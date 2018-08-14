@@ -71,6 +71,7 @@ public class RegisterFourthPageFragment extends Fragment {
     private String password,email;
     private int provider;
     private HashSet<Course> selectedCourses;
+
     public RegisterFourthPageFragment() {
         // Required empty public constructor
     }
@@ -202,7 +203,8 @@ public class RegisterFourthPageFragment extends Fragment {
 
         progressDialog.cancel();
         Toast.makeText(getActivity().getApplicationContext(),"sucess", Toast.LENGTH_LONG);
-        Intent intent = new Intent(getActivity(), MainActivity.class);
+        Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
+        intent.putExtra("source",RegistrationTypes.FR0M_REGISTRATION_PROCESS);
         intent.putExtra("student",student);
         startActivity(intent);
     }

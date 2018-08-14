@@ -100,12 +100,19 @@ public class ProfileEditActivity extends AppCompatActivity {
                     student.setAcademic(education);
                     student.setYear(year);
                     student.setSkills(skills);
-                    Intent i = new Intent(getBaseContext(),ProfileActivity.class);
-                    i.putExtra(STUDENT,student);
-                    i.putExtra(USER_SKILLS_SIZE,skillSize);
                     writeDataOfStudent();
 
-                    startActivity(i);
+                    if(source == RegistrationTypes.FR0M_REGISTRATION_PROCESS ){
+                        Intent i = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(i);
+                    }
+                    else {
+                        Intent i = new Intent(getBaseContext(), ProfileActivity.class);
+                        i.putExtra(STUDENT, student);
+                        startActivity(i);
+                    }
+
+                    finish();
                 }
 
             }

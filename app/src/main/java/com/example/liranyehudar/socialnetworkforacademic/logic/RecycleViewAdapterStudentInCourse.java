@@ -1,5 +1,7 @@
 package com.example.liranyehudar.socialnetworkforacademic.logic;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,14 +10,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
 
 import java.util.ArrayList;
 
 public class RecycleViewAdapterStudentInCourse extends RecyclerView.Adapter<RecycleViewAdapterStudentInCourse.StudentViewHolder>{
     private ArrayList<Student> allStudents;
+    private Context context;
 
-    public RecycleViewAdapterStudentInCourse(ArrayList<Student> all_students) {
+    public RecycleViewAdapterStudentInCourse(ArrayList<Student> all_students,Context context) {
         this.allStudents = all_students;
+        this.context = context;
     }
 
     @NonNull
@@ -27,8 +32,17 @@ public class RecycleViewAdapterStudentInCourse extends RecyclerView.Adapter<Recy
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull StudentViewHolder holder, final int position) {
         holder.theText.setText(allStudents.get(position).getFirstName()+" "+allStudents.get(position).getLastName());
+        holder.theText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context.getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("student",allStudents.get(position));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

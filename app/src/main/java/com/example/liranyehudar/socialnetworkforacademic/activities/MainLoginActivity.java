@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
-import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -29,9 +28,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainLoginActivity extends AppCompatActivity{
 
@@ -105,10 +101,9 @@ public class MainLoginActivity extends AppCompatActivity{
 
     private void loginWithFacebook() {
         if(AccessToken.getCurrentAccessToken() != null) {
-            // go to feed activity.
             Toast.makeText(this,"Feed Activity",Toast.LENGTH_LONG).show();
             Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-          //  startActivity(intent);
+            startActivity(intent);
         }
 
         loginButton.setReadPermissions("email,public_profile,user_location");
@@ -137,23 +132,6 @@ public class MainLoginActivity extends AppCompatActivity{
         edtEmail = findViewById(R.id.edt_email);
         edtPassword = findViewById(R.id.edt_password);
         callbackManager = CallbackManager.Factory.create();
-    }
-
-    public void disconnectFromFacebook() {
-
-        if (AccessToken.getCurrentAccessToken() == null) {
-            return; // already logged out
-        }
-
-        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
-                .Callback() {
-            @Override
-            public void onCompleted(GraphResponse graphResponse) {
-
-                LoginManager.getInstance().logOut();
-
-            }
-        }).executeAsync();
     }
 
     public void authLogin() {

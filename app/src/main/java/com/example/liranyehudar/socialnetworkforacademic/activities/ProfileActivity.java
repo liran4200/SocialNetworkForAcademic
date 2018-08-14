@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ChildCategory;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
@@ -50,7 +51,6 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView year_txt;
     private TextView field_txt;
     private String userSkills;
-    private int skillsSize;
     private ImageButton editProfile;
     private ImageView camera;
     private ImageView profileImg;
@@ -60,7 +60,6 @@ public class ProfileActivity extends AppCompatActivity {
     private DatabaseReference ref;
     private String allCourses;
     private String [] theCourses;
-    private int sizeCourses;
 
 
 
@@ -94,7 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this,ProfileEditActivity.class);
                 intent.putExtra(STUDENT,student);
-                intent.putExtra(SOURCE,1002);
+                intent.putExtra(SOURCE, RegistrationTypes.FR0M_PROFILE);
                 startActivity(intent);
             }
         });
@@ -152,26 +151,22 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-        checkSizeCourse();
-        layout.addSection(getSection("Courses",allCourses,sizeCourses));
-        layout.addSection(getSection("Skills",userSkills,skillsSize));
+        layout.addSection(getSection("Courses",allCourses));
+        if(userSkills.length() != 0){
+            layout.addSection(getSection("Skills",userSkills));
+        }
 
 
-    }
-
-    private void checkSizeCourse(){
-        theCourses = allCourses.split(",");
-        sizeCourses =theCourses.length;
 
     }
 
-    private Section<ParentCategory,ChildCategory> getSection(String parent, String child,int size) {
+    private Section<ParentCategory,ChildCategory> getSection(String parent, String child) {
 
         Section<ParentCategory,ChildCategory> section = new Section<>();
         ParentCategory parentCategory = new ParentCategory(parent);
         String [] all = child.split(",");
         List<ChildCategory> listChild = new ArrayList<>();
-        for(int i = 0; i<size; i++){
+        for(int i = 0; i<all.length; i++){
             listChild.add(new ChildCategory(all[i]));
         }
         section.parent = parentCategory;
@@ -274,12 +269,16 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateUI() {
         student = (Student) getIntent().getSerializableExtra(STUDENT);
+        int source = getIntent().getIntExtra("source",-1);
+        if(source == RegistrationTypes.FROM_SEARCHING){
+            editProfile.setVisibility(View.INVISIBLE);
+            camera.setVisibility(View.INVISIBLE);
+        }
         name_txt.setText(student.getFirstName() + " " + student.getLastName());;
         country_txt.setText(student.getCity() + ","+student.getCountry());
         education_txt.setText("Education: "+student.getAcademic());
         year_txt.setText("Year: " + student.getYear());
         field_txt.setText("Study: "+student.getField());
-        skillsSize = getIntent().getIntExtra(USER_SKILLS_SIZE,-1);
         userSkills = student.getSkills();
     }
 

@@ -1,6 +1,7 @@
 package com.example.liranyehudar.socialnetworkforacademic.logic;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
 
 import java.util.ArrayList;
 
@@ -45,7 +48,10 @@ public class RecycleViewAdapterSearching extends
             @Override
             public void onClick(View v) {
                 Toast.makeText(context.getApplicationContext(),students.get(position).getFirstName(),Toast.LENGTH_LONG).show();
-                // go to student profile.
+                Intent intent = new Intent(context.getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("student",students.get(position));
+                intent.putExtra("source", RegistrationTypes.FROM_SEARCHING);
+                context.startActivity(intent);
             }
         });
     }

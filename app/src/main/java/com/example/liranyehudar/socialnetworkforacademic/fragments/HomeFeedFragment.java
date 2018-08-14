@@ -16,11 +16,17 @@ import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.activities.MainLoginActivity;
+import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileEditActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.SharePostActivty;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Post;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdpaterFeeds;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -79,8 +85,9 @@ public class HomeFeedFragment extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //    Intent intent = new Intent(v.getContext(), ProfileEditActivity.class);
-              //  startActivity(intent);
+               Intent intent = new Intent(v.getContext(), ProfileActivity.class);
+               intent.putExtra("student",student);
+               startActivity(intent);
             }
         });
 
@@ -96,6 +103,7 @@ public class HomeFeedFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
+                disconnectFromFacebook();
                 Intent intent = new Intent(v.getContext(), MainLoginActivity.class);
                 startActivity(intent);
                 getActivity().finish();
@@ -211,4 +219,20 @@ public class HomeFeedFragment extends Fragment {
         }
     }
 
+    public void disconnectFromFacebook() {
+
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.liranyehudar.socialnetworkforacademic.logic;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.activities.CourseActivity;
+import com.example.liranyehudar.socialnetworkforacademic.activities.MainActivity;
+import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
 
 import java.util.ArrayList;
 
@@ -36,7 +40,7 @@ public class RecycleViewAdpaterCoursesGroups extends
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.txtCourse.setText(courses.get(position).heading());
 
         holder.imgCourseGroup.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +48,9 @@ public class RecycleViewAdpaterCoursesGroups extends
             public void onClick(View v) {
                 Log.d("clicked","onClickGroup");
                 Toast.makeText(v.getContext(),"OPEN GROUP PAGE",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context.getApplicationContext(), CourseActivity.class);
+                intent.putExtra("courseId",courses.get(position).getKey());
+                context.startActivity(intent);
             }
         });
 

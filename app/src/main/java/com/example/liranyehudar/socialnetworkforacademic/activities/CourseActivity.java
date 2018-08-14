@@ -30,18 +30,19 @@ public class CourseActivity extends AppCompatActivity {
     private TextView lecturer;
     private TextView day;
     private TextView time;
-    private View view;
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private RecyclerView recyclerView;
     private RecycleViewAdapterStudentInCourse adapter;
     private ArrayList<Student>all_students;
+    private String courseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
         init();
+        courseId = getIntent().getStringExtra("courseId");
         readFromDBTheCourse();
         readFromDBTheParticipant();
     }
@@ -57,7 +58,6 @@ public class CourseActivity extends AppCompatActivity {
     }
 
     private void readFromDBTheCourse(){
-        final String courseId ="7kyxcrOhbONk8C2W9iKew7O41003";
         database = FirebaseDatabase.getInstance();
         ref =  database.getReference("Courses/"+courseId);
 
@@ -78,7 +78,6 @@ public class CourseActivity extends AppCompatActivity {
     }
 
     private void readFromDBTheParticipant(){
-        final String courseId ="7kyxcrOhbONk8C2W9iKew7O41003";
         database = FirebaseDatabase.getInstance();
         ref =  database.getReference("Students");
 
@@ -126,7 +125,7 @@ public class CourseActivity extends AppCompatActivity {
     private void writeStudentToText(){
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RecycleViewAdapterStudentInCourse(all_students);
+        adapter = new RecycleViewAdapterStudentInCourse(all_students,getApplicationContext());
         recyclerView.setAdapter(adapter);
 
     }
