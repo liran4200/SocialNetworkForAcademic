@@ -68,7 +68,6 @@ public class ProfileEditActivity extends AppCompatActivity {
         }else{
             readFromDB();
         }
-
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +103,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     Intent i = new Intent(getBaseContext(),ProfileActivity.class);
                     i.putExtra(STUDENT,student);
                     i.putExtra(USER_SKILLS_SIZE,skillSize);
+                    writeDataOfStudent();
 
                     startActivity(i);
                 }
@@ -125,15 +125,13 @@ public class ProfileEditActivity extends AppCompatActivity {
     private void readFromDB() {
         firebaseAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        ref =  database.getReference("Students");
         String userid = firebaseAuth.getUid();
+        ref =  database.getReference("Students/"+userid);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    student = childSnapshot.getValue(Student.class);
-                }
+                student = dataSnapshot.getValue(Student.class);
                 updateUI();
                 Log.d("student",student.toString());
             }
@@ -143,6 +141,14 @@ public class ProfileEditActivity extends AppCompatActivity {
                 Log.d("error",databaseError.getMessage());
             }
         });
+    }
+
+    private void writeDataOfStudent(){
+        database = FirebaseDatabase.getInstance();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference studentRef =  database.getReference().child("Students").child(userId);
+        studentRef.setValue(student);
     }
 
     public boolean checkAll(){

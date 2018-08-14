@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -16,11 +17,20 @@ import android.widget.TextView;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ChildCategory;
+import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ParentCategory;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import iammert.com.expandablelib.ExpandableLayout;
 import iammert.com.expandablelib.Section;
@@ -46,6 +56,11 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView profileImg;
     private ExpandableLayout layout;
     private Student student;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
+    private String allCourses;
+    private String [] theCourses;
+    private int sizeCourses;
 
 
 
@@ -57,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         setUI();
         updateUI();
-        doLayout();
+        readCourseFromDB();
 
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +100,43 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
     }
+
+    private void readCourseFromDB(){
+        final String userid = FirebaseAuth.getInstance().getUid();
+        database = FirebaseDatabase.getInstance();
+        ref =  database.getReference("Courses");
+
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                takeAllCourse(dataSnapshot,userid);
+                doLayout();
+            }
+
+            @Override
+            public void onCancelled( DatabaseError databaseError) {
+                Log.d("error",databaseError.getMessage());
+            }
+        });
+    }
+
+    private void takeAllCourse(DataSnapshot dataSnapshot,String userID){
+        try {
+            for (DataSnapshot dataSn : dataSnapshot.getChildren()) {
+                Course course = dataSn.getValue(Course.class);
+                if (course.isRegisteredStudent(userID))
+                    if(allCourses == null){
+                        allCourses = course.getNumber() + ": "+course.getName()+",";
+                    }else{
+                        allCourses += course.getNumber() + ": "+course.getName()+",";
+                    }
+
+            }
+        }catch (Exception e){
+            Log.e("err",e.getMessage());
+        }
+    }
     private void doLayout(){
         layout.setRenderer(new ExpandableLayout.Renderer<ParentCategory,ChildCategory>() {
 
@@ -100,9 +152,16 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-        layout.addSection(getSection("Courses","computer,data,assembly",3));
+        checkSizeCourse();
+        layout.addSection(getSection("Courses",allCourses,sizeCourses));
         layout.addSection(getSection("Skills",userSkills,skillsSize));
 
+
+    }
+
+    private void checkSizeCourse(){
+        theCourses = allCourses.split(",");
+        sizeCourses =theCourses.length;
 
     }
 

@@ -62,6 +62,9 @@ public class Student implements Serializable{
         return CoursesId;
     }
 
+    public boolean isRegisteredCourse(String courseID) {
+        return CoursesId.containsKey(courseID);
+    }
 
     public void setCoursesId(Map<String, Boolean> coursesId) {
         CoursesId = coursesId;
