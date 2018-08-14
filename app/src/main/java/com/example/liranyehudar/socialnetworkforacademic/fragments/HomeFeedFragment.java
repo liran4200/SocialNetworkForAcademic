@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.example.liranyehudar.socialnetworkforacademic.logic.Post;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdpaterFeeds;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,13 +44,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class HomeFeedFragment extends Fragment {
 
-    public static int RESULT_SHARE_ACTIVTIY = 1 ;
+    public static int RESULT_SHARE_ACTIVTIY = 1;
 
     private DatabaseReference ref;
     private FirebaseDatabase database;
     CircleImageView profile;
     TextView txtPost;
-    TextView txtLogOut;
+    LinearLayout txtLogOut;
     RecyclerView recyclerView;
     RecycleViewAdpaterFeeds adpaterFeeds;
     ArrayList<Post> postArrayList;
@@ -93,7 +95,10 @@ public class HomeFeedFragment extends Fragment {
         txtLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(v.getContext(), MainLoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
 
@@ -103,7 +108,7 @@ public class HomeFeedFragment extends Fragment {
     private void loadStudent(){
         String userId = FirebaseAuth.getInstance().getUid();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Students/"+userId);
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 student = dataSnapshot.getValue(Student.class);
@@ -163,7 +168,7 @@ public class HomeFeedFragment extends Fragment {
         txtPost = view.findViewById(R.id.txt_post);
         progressBarPosts = view.findViewById(R.id.prg_loading_posts);
         txtNoPosts = view.findViewById(R.id.txt_no_posts_found);
-        txtLogOut = view.findViewById(R.id.txtLogout);
+        txtLogOut = view.findViewById(R.id.layout_logout);
     }
 
     private void sharePost(String status) {
@@ -176,8 +181,11 @@ public class HomeFeedFragment extends Fragment {
         database = FirebaseDatabase.getInstance();
         DatabaseReference postRef =  database.getReference().child("Posts").push();
         p.setKey(postRef.getKey());
+        student.addPostId(postRef.getKey());
         postRef.setValue(p);
         //save post to student
+        DatabaseReference studentRef = database.getReference().child("Students/"+student.getKey());
+        studentRef.setValue(student);
     }
 
     private void addPosts(DataSnapshot dataSnapshot) {

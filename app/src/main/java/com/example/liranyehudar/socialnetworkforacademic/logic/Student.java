@@ -26,6 +26,10 @@ public class Student implements Serializable{
 
     }
 
+    public void addPostId(String id) {
+        PostsId.put(id,true);
+    }
+
     public String getKey() {
         return key;
     }

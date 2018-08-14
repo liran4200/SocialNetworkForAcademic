@@ -1,16 +1,19 @@
 package com.example.liranyehudar.socialnetworkforacademic.logic;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -38,7 +41,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
     }
 
     @Override
-    public void onBindViewHolder(ModelFeedViewHolder holder, final int position) {
+    public void onBindViewHolder(final ModelFeedViewHolder holder, final int position) {
         Post p = postArrayList.get(position);
         holder.fullName.setText(p.getFullName());
         holder.txtStatus.setText(p.getStatus());
@@ -47,15 +50,30 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
         holder.txtCommentsAmount.setText(p.getComments()+" comments");
         holder.txtLikesAmount.setText(p.getLikes()+"");
 
+        final String userId = FirebaseAuth.getInstance().getUid();
+        if(p.isStudentLiked(userId)){
+            holder.imgViewLike.setColorFilter(Color.BLUE);
+        }
+
         holder.layoutLikes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(),"like clicked",Toast.LENGTH_SHORT).show();
                 Post p = postArrayList.get(position);
-                p.setLikes(p.getLikes()+1);
+                if(p.isStudentLiked(userId)){
+                    holder.imgViewLike.setColorFilter(Color.TRANSPARENT);
+                    p.setLikes(p.getLikes()-1);
+                    p.removeStudentsWhoLiked(userId);
+                }
+                else{
+                    holder.imgViewLike.setColorFilter(Color.BLUE);
+                    p.setLikes(p.getLikes()+1);
+                    p.addStudentsWhoLiked(userId);
+                }
+
                 DatabaseReference ref = FirebaseDatabase.getInstance()
-                        .getReference().child("Posts/"+p.getKey()+"/likes");
-                ref.setValue(p.getLikes());
+                        .getReference().child("Posts/"+p.getKey());
+                ref.setValue(p);
             }
         });
     }
@@ -100,6 +118,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
         TextView txtCommentsAmount;
         TextView txtTime;
         TextView txtStatus;
+        ImageView imgViewLike;
         LinearLayout layoutLikes;
 
         public ModelFeedViewHolder(View itemView) {
@@ -111,6 +130,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
             txtTime = itemView.findViewById(R.id.txt_date_time);
             txtStatus = itemView.findViewById(R.id.txt_status);
             layoutLikes = itemView.findViewById(R.id.layout_likes);
+            imgViewLike = itemView.findViewById(R.id.imgView_like);
 
         }
     }

@@ -131,6 +131,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/imgView_like"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:adjustViewBounds="true"

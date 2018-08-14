@@ -2,6 +2,9 @@ package com.example.liranyehudar.socialnetworkforacademic.logic;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @IgnoreExtraProperties
 public class Post {
 
@@ -12,9 +15,30 @@ public class Post {
     private String status;
     private long createdTime ;
     private String studentId;
+    private Map<String,Boolean> StudentsIdWhoLiked = new HashMap<>();
 
     public Post() {
 
+    }
+
+    public void addStudentsWhoLiked(String id){
+        StudentsIdWhoLiked.put(id,true);
+    }
+
+    public void removeStudentsWhoLiked(String id) {
+        StudentsIdWhoLiked.remove(id);
+    }
+
+    public boolean isStudentLiked(String id) {
+        return StudentsIdWhoLiked.containsKey(id);
+    }
+
+    public Map<String, Boolean> getStudentsWhoLiked() {
+        return StudentsIdWhoLiked;
+    }
+
+    public void setStudentsWhoLiked(Map<String, Boolean> studentsWhoLiked) {
+        StudentsIdWhoLiked = studentsWhoLiked;
     }
 
     public long getCreatedTime() {
