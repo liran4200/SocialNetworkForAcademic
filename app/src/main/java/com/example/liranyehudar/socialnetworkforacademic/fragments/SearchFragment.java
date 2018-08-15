@@ -1,8 +1,6 @@
 package com.example.liranyehudar.socialnetworkforacademic.fragments;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +16,8 @@ import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterSearching;
-import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdpaterCoursesGroups;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,19 +32,19 @@ public class SearchFragment extends Fragment {
     private ImageButton btnSearch;
     private EditText    edtSearch;
     private RadioButton radioStudentName;
-    private ArrayList<Student> students;
     private ProgressBar progressBar;
     private TextView txtNoResult;
 
-    private DatabaseReference ref;
-    private FirebaseDatabase database;
     private RecyclerView recyclerView;
     private RecycleViewAdapterSearching recycleViewAdapterSearching;
+    private ArrayList<Student> students;
+
+    private DatabaseReference ref;
+    private FirebaseDatabase database;
 
     public SearchFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,18 +52,17 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_search, container, false);
         bindUI();
-        students = new ArrayList<>();
-        recycleViewAdapterSearching= new RecycleViewAdapterSearching(view.getContext(),students);
-        recyclerView.setAdapter(recycleViewAdapterSearching);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        init();
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String searchString = edtSearch.getText().toString().trim();
+                //handle nothing entered
                 if(searchString.length()== 0){
                     Toast.makeText(view.getContext(),"Please write on search bar",Toast.LENGTH_SHORT).show();
                     return;
                 }
+                //init component visibility
                 txtNoResult.setVisibility(View.INVISIBLE);
                 recyclerView.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
@@ -75,6 +70,13 @@ public class SearchFragment extends Fragment {
             }
         });
         return view;
+    }
+    private void init() {
+        students = new ArrayList<>();
+        recycleViewAdapterSearching= new RecycleViewAdapterSearching(view.getContext(),students);
+        recyclerView.setAdapter(recycleViewAdapterSearching);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        radioStudentName.setActivated(true);
     }
 
     private void bindUI() {
@@ -93,13 +95,17 @@ public class SearchFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 students.clear();
-                addStudents(dataSnapshot,searchString);
-                updateUI();
+                if(dataSnapshot != null) {
+                    addStudents(dataSnapshot, searchString);
+                    updateUI();
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(view.getContext(),"error to load",Toast.LENGTH_LONG);
+                Toast.makeText(view.getContext(),databaseError.getMessage()
+                        ,Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -110,6 +116,7 @@ public class SearchFragment extends Fragment {
                 Student s = ds.getValue(Student.class);
                 if(!s.getKey().equals(userId)) { //not display the user who search.
                     String fullName = s.getFirstName() + " " + s.getLastName();
+                    //ignore lowercase/uppercase
                     if (fullName.toLowerCase().contains(searchString.toLowerCase())) {
                         students.add(s);
                     }

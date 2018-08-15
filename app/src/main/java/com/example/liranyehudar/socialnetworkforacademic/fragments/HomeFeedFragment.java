@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.activities.MainLoginActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
-import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileEditActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.SharePostActivty;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Post;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdpaterFeeds;
@@ -28,42 +26,37 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class HomeFeedFragment extends Fragment {
 
     public static int RESULT_SHARE_ACTIVTIY = 1;
 
+    private RecyclerView recyclerView;
+    private RecycleViewAdpaterFeeds adpaterFeeds;
+    private ArrayList<Post> postArrayList;
+
+    private CircleImageView profile;
+    private TextView txtPost;
+    private LinearLayout txtLogOut;
+    private View view;
+    private ProgressBar progressBarPosts;
+    private TextView txtNoPosts;
+
+    private Student student;
     private DatabaseReference ref;
     private FirebaseDatabase database;
-    CircleImageView profile;
-    TextView txtPost;
-    LinearLayout txtLogOut;
-    RecyclerView recyclerView;
-    RecycleViewAdpaterFeeds adpaterFeeds;
-    ArrayList<Post> postArrayList;
-    View view;
-    Student student;
-    ProgressBar progressBarPosts;
-    TextView txtNoPosts;
 
     public HomeFeedFragment() {
         // Required empty public constructor
@@ -75,10 +68,7 @@ public class HomeFeedFragment extends Fragment {
         // Inflate the layout for this fragment
         view  = inflater.inflate(R.layout.fragment_home_feed, container, false);
         bindUI();
-        postArrayList = new ArrayList<>();
-        adpaterFeeds = new RecycleViewAdpaterFeeds(postArrayList,view.getContext());
-        recyclerView.setAdapter(adpaterFeeds);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        init();
         loadStudent();
         loadPosts();
 
@@ -116,6 +106,13 @@ public class HomeFeedFragment extends Fragment {
         return view;
     }
 
+    private void init(){
+        postArrayList = new ArrayList<>();
+        adpaterFeeds = new RecycleViewAdpaterFeeds(postArrayList,view.getContext());
+        recyclerView.setAdapter(adpaterFeeds);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+    }
+
     private void logOut(){
         Intent intent = new Intent(view.getContext(), MainLoginActivity.class);
         startActivity(intent);
@@ -133,7 +130,8 @@ public class HomeFeedFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Toast.makeText(getActivity().getApplicationContext(),
+                        databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -157,7 +155,7 @@ public class HomeFeedFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(view.getContext(),databaseError.getMessage(),Toast.LENGTH_LONG);
+                Toast.makeText(view.getContext(),databaseError.getMessage(),Toast.LENGTH_LONG).show();
                 progressBarPosts.setVisibility(View.INVISIBLE);
                 txtNoPosts.setText("Error");
                 txtNoPosts.setVisibility(View.VISIBLE);

@@ -5,21 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
-import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterCoursesSelection;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdpaterCoursesGroups;
-import com.example.liranyehudar.socialnetworkforacademic.logic.Time;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,22 +25,21 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class CoursesFragment extends Fragment {
 
     private RecyclerView recyclerViewCourses;
     private RecycleViewAdpaterCoursesGroups adapter;
     private ArrayList<Course> coursesList;
-    private DatabaseReference ref;
-    private FirebaseDatabase database;
+
     private View view;
     private ProgressBar progressBar;
     private TextView txtNotRegister;
+    private Button btnTryAgain;
+
+    private DatabaseReference ref;
+    private FirebaseDatabase database;
 
     public CoursesFragment() {
-        // Required empty public constructor
     }
 
 
@@ -53,15 +48,23 @@ public class CoursesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_courses, container, false);
-        bindUI(view);
+        coursesList = new ArrayList<>();
+        bindUI();
         loadCourses();
+        btnTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadCourses();
+            }
+        });
         return view;
     }
 
-    private void bindUI(View view) {
+    private void bindUI() {
         recyclerViewCourses = view.findViewById(R.id.recycle_groups_courses);
         progressBar = view.findViewById(R.id.prg_my_courses);
         txtNotRegister = view.findViewById(R.id.txt_no_register);
+        btnTryAgain = view.findViewById(R.id.btn_try_again);
     }
 
     public void loadCourses() {
@@ -72,27 +75,28 @@ public class CoursesFragment extends Fragment {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                addCourses(dataSnapshot,userid);
-                updateUI();
+                coursesList.clear();
+                if(dataSnapshot!= null) {
+                    addCourses(dataSnapshot, userid);
+                    updateUI();
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(view.getContext(),"Error",Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(),databaseError.getMessage()
+                        ,Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.INVISIBLE);
+                btnTryAgain.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void addCourses(DataSnapshot dataSnapshot,String userId){
-        coursesList = new ArrayList<>();
-        try {
-            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                Course c = ds.getValue(Course.class);
-                if (c.isRegisteredStudent(userId))
-                    coursesList.add(c);
-            }
-        }catch (Exception e){
-            Log.e("err",e.getMessage());
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+            Course c = ds.getValue(Course.class);
+            if (c.isRegisteredStudent(userId))
+                coursesList.add(c);
         }
     }
 

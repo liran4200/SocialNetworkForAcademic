@@ -41,15 +41,7 @@ public class MainLoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_login);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser() != null) {
-            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-            startActivity(intent);
-        }
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Login");
-        progressDialog.setMessage("Please wait, login...");
+        init();
         bindUI();
         loginWithFacebook();
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
@@ -69,24 +61,15 @@ public class MainLoginActivity extends AppCompatActivity{
                 authLogin();
             }
         });
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser != null) {
-           // Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-           // startActivity(intent);
+        if(firebaseAuth.getCurrentUser() != null) {
+            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //disconnectFromFacebook();
     }
 
     @Override
@@ -95,13 +78,22 @@ public class MainLoginActivity extends AppCompatActivity{
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void init() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Login");
+        progressDialog.setMessage("Please wait, login...");
+        progressDialog.setCanceledOnTouchOutside(false);
+    }
+
     private void loginWithFacebook() {
+        // if user already logged in, go to feed activity
         if(AccessToken.getCurrentAccessToken() != null) {
-            Toast.makeText(this,"Feed Activity",Toast.LENGTH_LONG).show();
             Intent intent = new Intent(getApplicationContext(),MainActivity.class);
             startActivity(intent);
         }
 
+        // request permissions from facebook
         loginButton.setReadPermissions("email,public_profile,user_location");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -111,12 +103,13 @@ public class MainLoginActivity extends AppCompatActivity{
 
             @Override
             public void onCancel() {
-
+                Toast.makeText(getApplicationContext(),
+                        "Error to login with facebook,please try again",Toast.LENGTH_LONG);
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.e("facebookError",error.getMessage());
+                Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG);
             }
         });
     }
@@ -138,6 +131,7 @@ public class MainLoginActivity extends AppCompatActivity{
             return;
         }
         progressDialog.show();
+        // check authentication
         firebaseAuth.signInWithEmailAndPassword(email,pass).
                 addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -150,7 +144,6 @@ public class MainLoginActivity extends AppCompatActivity{
                 }else{
                     //handle error
                     Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                    Log.e("err",task.getException().getMessage());
                     progressDialog.cancel();
                 }
             }
@@ -164,23 +157,22 @@ public class MainLoginActivity extends AppCompatActivity{
                     @Override
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            if (task.getResult().getAdditionalUserInfo().isNewUser()) {
-                                Intent intent = new Intent(getApplicationContext(), RegistrationProccessActivity.class);
-                                intent.putExtra("calling-by", RegistrationTypes.BY_FACEBOOK);
-                                startActivity(intent);
-                            }
-                            else {
-                                Log.d("msg", "signInWithCredential:success");
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                            }
+                                // check if this is a new user for create account
+                                if (task.getResult().getAdditionalUserInfo().isNewUser()) {
+                                    Intent intent = new Intent(getApplicationContext(), RegistrationProccessActivity.class);
+                                    intent.putExtra("calling-by", RegistrationTypes.BY_FACEBOOK);
+                                    startActivity(intent);
+                                }
+                                else {
+                                    // user already has account
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                }
                         }
                         else{
-                                // If sign in fails, display a message to the user.
-                                Log.w("err", "signInWithCredential:failure", task.getException());
-                                Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(getApplicationContext(), task.getException().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

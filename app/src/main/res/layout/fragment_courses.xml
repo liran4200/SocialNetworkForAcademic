@@ -43,6 +43,15 @@
             android:textSize="24dp"
             android:visibility="invisible" />
 
+        <Button
+            android:id="@+id/btn_try_again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Try again"
+            android:visibility="invisible"
+            android:textSize="15sp" />
+
     </RelativeLayout>
 
 </LinearLayout>

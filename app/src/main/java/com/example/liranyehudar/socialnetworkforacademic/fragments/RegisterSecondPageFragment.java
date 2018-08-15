@@ -44,6 +44,7 @@ public class RegisterSecondPageFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 student.setCity(edtCity.getText().toString());
                 student.setCountry(edtCountry.getText().toString());
 

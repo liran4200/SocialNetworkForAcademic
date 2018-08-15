@@ -14,7 +14,8 @@ import com.example.liranyehudar.socialnetworkforacademic.fragments.RegisterThird
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 
 
-public class RegistrationProccessActivity extends AppCompatActivity implements Communicator {
+public class RegistrationProccessActivity extends AppCompatActivity
+        implements Communicator {
 
     final static int PROGRESS_CHUNCK = 25;
 
@@ -31,6 +32,7 @@ public class RegistrationProccessActivity extends AppCompatActivity implements C
         setContentView(R.layout.activity_register_first_page);
 
         bindUI();
+        //get calling by to different handle.
         int callingBy = getIntent().getIntExtra("calling-by",0);
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -57,11 +59,11 @@ public class RegistrationProccessActivity extends AppCompatActivity implements C
     public void onBackPressed() {
 
         int count = fragmentManager.getBackStackEntryCount();
-
         if (count == 0) {
             super.onBackPressed();
             //additional code
         } else {
+            // updated the progress bar when back pressed.
             fragmentManager.popBackStack();
             currentProgress-=PROGRESS_CHUNCK;
             progressBar.setProgress(currentProgress);

@@ -3,7 +3,6 @@ package com.example.liranyehudar.socialnetworkforacademic.fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,23 +17,17 @@ import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.R;
-import com.example.liranyehudar.socialnetworkforacademic.activities.MainActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileEditActivity;
-import com.example.liranyehudar.socialnetworkforacademic.activities.RegistrationProccessActivity;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterCoursesSelection;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
-import com.example.liranyehudar.socialnetworkforacademic.logic.Time;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.login.LoginResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,20 +36,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RegisterFourthPageFragment extends Fragment {
 
     private RecyclerView recyclerViewSelectCourses;
-    private ArrayList<Course> coursesList;
     private RecycleViewAdapterCoursesSelection selectionAdapter;
+    private ArrayList<Course> coursesList;
+
     private Button btnSubmit;
     private View view;
     private ProgressBar progressBar;
@@ -67,22 +57,45 @@ public class RegisterFourthPageFragment extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference ref;
 
+    private HashSet<Course> selectedCourses;
     private Student student;
     private String password,email;
     private int provider;
-    private HashSet<Course> selectedCourses;
 
     public RegisterFourthPageFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_register_fourth_page, container, false);
+        init();
+        bindUI();
+        loadCourses();
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressDialog = new ProgressDialog(view.getContext());
+                progressDialog.setTitle("Finish");
+                progressDialog.setMessage("Creating an account");
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
+                setStudentCourses();
+                if(provider == RegistrationTypes.BY_NEW_ACCOUNT){ // firebase provider
+                    registerUser();
+                }
+                else { // facebook provider.
+                    loadUserDataFromFacebook(AccessToken.getCurrentAccessToken());
+                }
+            }
+        });
 
+        return view;
+    }
+
+    private void init() {
         firebaseAuth = FirebaseAuth.getInstance();
         selectedCourses = new HashSet<>();
         coursesList = new ArrayList<>();
@@ -95,30 +108,6 @@ public class RegisterFourthPageFragment extends Fragment {
             provider = RegistrationTypes.BY_FACEBOOK;
         }
         else {provider = RegistrationTypes.BY_NEW_ACCOUNT;}
-
-        bindUI();
-
-        loadCourses();
-
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressDialog = new ProgressDialog(view.getContext());
-                progressDialog.setTitle("Finish");
-                progressDialog.setMessage("Creating an account");
-                progressDialog.show();
-                Log.d("courses",selectedCourses.toString());
-                setStudentCourses();
-                if(provider == RegistrationTypes.BY_NEW_ACCOUNT){ // firebase provider
-                    registerUser();
-                }
-                else { // facebook provider.
-                    loadUserDataFromFacebook(AccessToken.getCurrentAccessToken());
-                }
-            }
-        });
-
-        return view;
     }
 
     private void setStudentCourses() {
@@ -149,7 +138,8 @@ public class RegisterFourthPageFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Toast.makeText(getActivity().getApplicationContext(),
+                        databaseError.getMessage(),Toast.LENGTH_SHORT);
             }
         });
     }
@@ -202,11 +192,12 @@ public class RegisterFourthPageFragment extends Fragment {
         }
 
         progressDialog.cancel();
-        Toast.makeText(getActivity().getApplicationContext(),"sucess", Toast.LENGTH_LONG);
+
         Intent intent = new Intent(getActivity(), ProfileEditActivity.class);
         intent.putExtra("source",RegistrationTypes.FR0M_REGISTRATION_PROCESS);
         intent.putExtra("student",student);
         startActivity(intent);
+        getActivity().finish();
     }
 
     private void loadUserDataFromFacebook(AccessToken token) {

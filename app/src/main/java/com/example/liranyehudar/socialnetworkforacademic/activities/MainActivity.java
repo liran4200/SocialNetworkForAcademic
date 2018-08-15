@@ -7,18 +7,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.CoursesFragment;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.HomeFeedFragment;
 import com.example.liranyehudar.socialnetworkforacademic.fragments.SearchFragment;
-import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,14 +29,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bindUI();
-        //Temporary ...
-       // Student student =(Student) getIntent().getSerializableExtra("student");
-
-        homeFeedFragment = new HomeFeedFragment();
-        coursesFragment = new CoursesFragment();
-        searchFragment = new SearchFragment();
-
-        setFragment(homeFeedFragment); // default
+        init();
+        // navigate between home,courses,searching fragments
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -61,10 +49,16 @@ public class MainActivity extends AppCompatActivity {
 
                         default:
                             return false;
-
                 }
             }
         });
+    }
+
+    private void init() {
+        homeFeedFragment = new HomeFeedFragment();
+        coursesFragment = new CoursesFragment();
+        searchFragment = new SearchFragment();
+        setFragment(homeFeedFragment); // default
     }
 
     private void setFragment(Fragment fragment) {

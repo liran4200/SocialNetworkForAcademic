@@ -1,6 +1,5 @@
 package com.example.liranyehudar.socialnetworkforacademic.fragments;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,9 +19,6 @@ import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RegisterThirdPageFragment extends Fragment {
 
     String[] academic = {"Afeka"};
@@ -61,24 +57,13 @@ public class RegisterThirdPageFragment extends Fragment {
         final String pass = (String) this.getArguments().get("password");
         final String email = (String) this.getArguments().get("email");
 
-        ArrayList<String> listAcademic = new ArrayList<String>(Arrays.asList(academic));
-        initSpinner(listAcademic , spinnerAcademicInstitution);
-
-        ArrayList<String> listStudies = new ArrayList<String>(Arrays.asList(studies));
-        initSpinner(listStudies , spinnerStudies);
-
-        ArrayList<String> listYears = new ArrayList<String>(Arrays.asList(years));
-        initSpinner(listYears, spinnerYears);
+        setUI();
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 communicator.update();
-
-                student.setAcademic(spinnerAcademicInstitution.getSelectedItem().toString());
-                student.setYear(spinnerYears.getSelectedItem().toString());
-                student.setField(spinnerStudies.getSelectedItem().toString());
-
+                setStudentDetails();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Fragment fragment = new RegisterFourthPageFragment();
@@ -95,12 +80,28 @@ public class RegisterThirdPageFragment extends Fragment {
 
         return view;
     }
+    private void setStudentDetails(){
+        student.setAcademic(spinnerAcademicInstitution.getSelectedItem().toString());
+        student.setYear(spinnerYears.getSelectedItem().toString());
+        student.setField(spinnerStudies.getSelectedItem().toString());
+    }
 
     private void bindUI(View v) {
         spinnerAcademicInstitution = v.findViewById(R.id.spinner_academic);
         spinnerStudies = v.findViewById(R.id.spinner_studies);
         spinnerYears = v.findViewById(R.id.spinner_year);
         btnNext = v.findViewById(R.id.btn_next_select_courses);
+    }
+
+    private void setUI() {
+        ArrayList<String> listAcademic = new ArrayList<String>(Arrays.asList(academic));
+        initSpinner(listAcademic , spinnerAcademicInstitution);
+
+        ArrayList<String> listStudies = new ArrayList<String>(Arrays.asList(studies));
+        initSpinner(listStudies , spinnerStudies);
+
+        ArrayList<String> listYears = new ArrayList<String>(Arrays.asList(years));
+        initSpinner(listYears, spinnerYears);
     }
 
     private void initSpinner(ArrayList<String> list, Spinner sp) {
