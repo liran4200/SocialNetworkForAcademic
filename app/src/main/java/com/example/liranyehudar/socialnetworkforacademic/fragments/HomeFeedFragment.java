@@ -103,14 +103,23 @@ public class HomeFeedFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                disconnectFromFacebook();
-                Intent intent = new Intent(v.getContext(), MainLoginActivity.class);
-                startActivity(intent);
-                getActivity().finish();
+                if (AccessToken.getCurrentAccessToken() != null) {
+                    disconnectFromFacebook();
+                }
+                else{
+                    logOut();
+                }
+
             }
         });
 
         return view;
+    }
+
+    private void logOut(){
+        Intent intent = new Intent(view.getContext(), MainLoginActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 
     private void loadStudent(){
@@ -220,18 +229,12 @@ public class HomeFeedFragment extends Fragment {
     }
 
     public void disconnectFromFacebook() {
-
-        if (AccessToken.getCurrentAccessToken() == null) {
-            return; // already logged out
-        }
-
         new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
                 .Callback() {
             @Override
             public void onCompleted(GraphResponse graphResponse) {
-
                 LoginManager.getInstance().logOut();
-
+                logOut();
             }
         }).executeAsync();
     }

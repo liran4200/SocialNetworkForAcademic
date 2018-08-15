@@ -49,7 +49,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
         holder.txtTime.setText(time);
         holder.txtCommentsAmount.setText(p.getComments()+" comments");
         holder.txtLikesAmount.setText(p.getLikes()+"");
-
+        holder.imgViewLike.setColorFilter(Color.TRANSPARENT); // defualt color.
         final String userId = FirebaseAuth.getInstance().getUid();
         if(p.isStudentLiked(userId)){
             holder.imgViewLike.setColorFilter(Color.BLUE);
@@ -79,7 +79,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
     }
 
     private String getTimeSincePosts(Post post) {
-        long diff = System.currentTimeMillis()-post.getCreatedTime();
+        long diff = Math.abs(System.currentTimeMillis()-post.getCreatedTime());
         long convertDiff = TimeUnit.MILLISECONDS.toSeconds(diff);
         if(convertDiff < 60)
          {
