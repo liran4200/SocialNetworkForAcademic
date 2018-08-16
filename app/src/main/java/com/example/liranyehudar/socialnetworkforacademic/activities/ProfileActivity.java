@@ -9,26 +9,35 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ChildCategory;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ParentCategory;
+import com.example.liranyehudar.socialnetworkforacademic.logic.Post;
+import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterStudentInCourse;
+import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdpaterFeeds;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +68,13 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private String allCourses;
-    private String [] theCourses;
+    private ProgressBar progressBarPosts;
+    private RecyclerView recyclerView;
+    private RecycleViewAdpaterFeeds adpaterFeeds;
+    private ArrayList<Post>postArrayList;
+    private TextView txtNoPosts;
+
+
 
 
 
@@ -70,8 +85,10 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         setUI();
+        writePosts();
         updateUI();
         readCourseFromDB();
+        loadPosts();
 
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -265,6 +282,9 @@ public class ProfileActivity extends AppCompatActivity {
         profileImg = (ImageView)findViewById(R.id.user_profile_image);
         camera = (ImageView)findViewById(R.id.camera_profile);
         layout = (ExpandableLayout)findViewById(R.id.expandable_layout);
+        recyclerView = findViewById(R.id.recycleView_posts_profile);
+        progressBarPosts = findViewById(R.id.prg_loading_posts_profile);
+        txtNoPosts =findViewById(R.id.txt_no_posts_found_profile);
     }
 
     private void updateUI() {
@@ -282,5 +302,61 @@ public class ProfileActivity extends AppCompatActivity {
         userSkills = student.getSkills();
     }
 
+    private void loadPosts() {
+        progressBarPosts.setVisibility(View.VISIBLE);
+        database = FirebaseDatabase.getInstance();
+        ref =  database.getReference("Posts");
+        Query myTopPostsQuery = database.getReference("Posts").orderByChild("createdTime");
+
+
+        myTopPostsQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                postArrayList.clear();
+                addPosts(dataSnapshot);
+                thingsToDo();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                progressBarPosts.setVisibility(View.INVISIBLE);
+                txtNoPosts.setText("Error");
+                txtNoPosts.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void addPosts(DataSnapshot dataSnapshot) {
+        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+            Post post = ds.getValue(Post.class);
+            if(student.getKey().equals(post.getStudentId())) {
+                postArrayList.add(post);
+            }
+        }
+
+        // reverse order because firebase return data only in asending order.
+        Collections.reverse(postArrayList);
+    }
+
+
+    private void thingsToDo() {
+        progressBarPosts.setVisibility(View.INVISIBLE);
+        txtNoPosts.setVisibility(View.INVISIBLE);
+        if(postArrayList.size() == 0){
+            recyclerView.setVisibility(View.INVISIBLE);
+            txtNoPosts.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            adpaterFeeds.notifyDataSetChanged();
+        }
+    }
+
+    private void writePosts(){
+        postArrayList = new ArrayList<>();
+        adpaterFeeds = new RecycleViewAdpaterFeeds(postArrayList,this);
+        recyclerView.setAdapter(adpaterFeeds);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 
 }
