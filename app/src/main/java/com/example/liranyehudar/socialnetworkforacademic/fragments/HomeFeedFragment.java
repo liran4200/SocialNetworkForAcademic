@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.activities.MainLoginActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
@@ -25,6 +26,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +34,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,6 +57,7 @@ public class HomeFeedFragment extends Fragment {
     private View view;
     private ProgressBar progressBarPosts;
     private TextView txtNoPosts;
+    private CircleImageView imgProfile;
 
     private Student student;
     private DatabaseReference ref;
@@ -126,6 +131,9 @@ public class HomeFeedFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 student = dataSnapshot.getValue(Student.class);
+                if(student.getProfileImageUrl()) {
+                    downloadImage(student.getKey(),imgProfile);
+                }
             }
 
             @Override
@@ -135,6 +143,14 @@ public class HomeFeedFragment extends Fragment {
             }
         });
     }
+
+    private void downloadImage(String userId,CircleImageView profileImg) {
+        StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/" + userId + "/image.jpg");
+        Glide.with(view.getContext() /* context */).using(new FirebaseImageLoader()).load(storageReference1)
+                .error(R.drawable.baseline_account_circle_black_24dp).fitCenter().into(profileImg);
+
+    }
+
 
 
     private void loadPosts() {
@@ -184,6 +200,7 @@ public class HomeFeedFragment extends Fragment {
         progressBarPosts = view.findViewById(R.id.prg_loading_posts);
         txtNoPosts = view.findViewById(R.id.txt_no_posts_found);
         txtLogOut = view.findViewById(R.id.layout_logout);
+        imgProfile = view.findViewById(R.id.profile_image);
     }
 
     private void sharePost(String status) {

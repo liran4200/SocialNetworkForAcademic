@@ -12,16 +12,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdpaterFeeds.ModelFeedViewHolder>{
 
@@ -43,6 +49,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
     @Override
     public void onBindViewHolder(final ModelFeedViewHolder holder, final int position) {
         Post p = postArrayList.get(position);
+        downloadImage(p.getStudentId(),holder.imgProfile);
         holder.fullName.setText(p.getFullName());
         holder.txtStatus.setText(p.getStatus());
         String time = getTimeSincePosts(p);
@@ -120,6 +127,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
         TextView txtStatus;
         ImageView imgViewLike;
         LinearLayout layoutLikes;
+        CircleImageView imgProfile;
 
         public ModelFeedViewHolder(View itemView) {
             super(itemView);
@@ -131,7 +139,14 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
             txtStatus = itemView.findViewById(R.id.txt_status);
             layoutLikes = itemView.findViewById(R.id.layout_likes);
             imgViewLike = itemView.findViewById(R.id.imgView_like);
-
+            imgProfile = itemView.findViewById(R.id.image_view_student);
         }
+    }
+
+    private void downloadImage(String userId,CircleImageView profileImg) {
+        StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/" + userId + "/image.jpg");
+        Glide.with(context.getApplicationContext() /* context */).using(new FirebaseImageLoader()).load(storageReference1)
+                .error(R.drawable.baseline_account_circle_black_24dp).fitCenter().into(profileImg);
+
     }
 }
