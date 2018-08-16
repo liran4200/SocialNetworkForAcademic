@@ -142,7 +142,7 @@ public class HomeFeedFragment extends Fragment {
         database = FirebaseDatabase.getInstance();
         ref =  database.getReference("Posts");
         Query myTopPostsQuery = database.getReference("Posts")
-                .orderByChild("createdTime");
+                .orderByChild("createdTime").limitToFirst(20);
 
 
         myTopPostsQuery.addValueEventListener(new ValueEventListener() {

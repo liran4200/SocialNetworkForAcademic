@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.example.liranyehudar.socialnetworkforacademic.activities.ChatGroupActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.CourseActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.MainActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
@@ -59,6 +60,9 @@ public class RecycleViewAdpaterCoursesGroups extends
             public void onClick(View v) {
                 Toast.makeText(v.getContext(),"OPEN MESSAGE",Toast.LENGTH_SHORT).show();
                 Log.d("clicked","onClickmessage");
+                Intent intent = new Intent(context.getApplicationContext(), ChatGroupActivity.class);
+                intent.putExtra("courseId",courses.get(position).getKey());
+                context.startActivity(intent);
             }
         });
 

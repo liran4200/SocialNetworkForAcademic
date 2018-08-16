@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image_message_profile"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/circle" />
+
+        <TextView
+            android:id="@+id/text_message_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:text="Student Name"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/text_message_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="152dp"
+            android:text="11:40"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:textSize="10sp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_message_body"
+        android:text="hi man, how are you?"
+        android:background="@drawable/rounded_rectangle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxWidth="240dp"
+        android:padding="8dp"
+        android:textColor="#ffffff"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"/>
+
+</LinearLayout>

@@ -13,5 +13,6 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_profile_edit">ProfileEditActivity</string>
     <string name="title_activity_course">CourseActivity</string>
+    <string name="title_activity_chat_course_activty">ChatCourseActivty</string>
 
 </resources>
