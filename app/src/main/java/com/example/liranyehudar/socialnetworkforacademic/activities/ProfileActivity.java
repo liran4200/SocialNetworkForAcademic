@@ -99,7 +99,7 @@ public class ProfileActivity extends AppCompatActivity {
                             selectImage();
                             edit = true;
                         }else{
-                         editImage();
+                            editImage();
                         }
                         break;
                 }
