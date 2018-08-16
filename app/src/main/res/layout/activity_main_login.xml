@@ -19,6 +19,9 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:ems="10"
+            android:drawableLeft="@drawable/baseline_email_black_24dp"
+            android:drawablePadding="10dp"
+
             android:hint="Your email"
             android:inputType="textPersonName"/>
 
@@ -27,6 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:drawableLeft="@drawable/baseline_lock_black_24dp"
+            android:drawablePadding="10dp"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Password"
