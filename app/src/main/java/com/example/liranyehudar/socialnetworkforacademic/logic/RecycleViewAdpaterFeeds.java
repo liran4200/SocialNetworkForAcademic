@@ -92,7 +92,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
         }
 
         convertDiff = TimeUnit.MILLISECONDS.toHours(diff);
-        if(convertDiff < 60){
+        if(convertDiff < 24){
             return convertDiff +" hrs";
         }
 

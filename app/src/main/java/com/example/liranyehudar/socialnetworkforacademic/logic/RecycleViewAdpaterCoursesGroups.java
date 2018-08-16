@@ -62,6 +62,7 @@ public class RecycleViewAdpaterCoursesGroups extends
                 Log.d("clicked","onClickmessage");
                 Intent intent = new Intent(context.getApplicationContext(), ChatGroupActivity.class);
                 intent.putExtra("courseId",courses.get(position).getKey());
+                intent.putExtra("courseName",courses.get(position).getName());
                 context.startActivity(intent);
             }
         });
