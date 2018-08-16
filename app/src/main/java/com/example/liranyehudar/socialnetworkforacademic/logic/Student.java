@@ -17,13 +17,21 @@ public class Student implements Serializable{
     private String year;
     private Map<String,Boolean> CoursesId = new HashMap<>();
     private Map<String,Boolean> PostsId = new HashMap<>();
-    //private String profileImageUrl;
+    private boolean profileImageUrl = false;
     private String skills;
     private String country;
     private String city;
 
     public Student() {
 
+    }
+
+    public void setProfileImageUrl(boolean profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public boolean getProfileImageUrl() {
+        return profileImageUrl;
     }
 
     public void addPostId(String id) {

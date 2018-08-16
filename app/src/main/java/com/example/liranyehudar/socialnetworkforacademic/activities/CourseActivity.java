@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
@@ -36,12 +37,20 @@ public class CourseActivity extends AppCompatActivity {
     private RecycleViewAdapterStudentInCourse adapter;
     private ArrayList<Student>all_students;
     private String courseId;
+    private ImageView imgBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
         init();
+
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CourseActivity.super.onBackPressed();
+            }
+        });
         courseId = getIntent().getStringExtra("courseId");
         readFromDBTheCourse();
         readFromDBTheParticipant();
@@ -55,6 +64,7 @@ public class CourseActivity extends AppCompatActivity {
         day = (TextView)findViewById(R.id.day_in_week);
         time = (TextView)findViewById(R.id.hours);
         recyclerView = findViewById(R.id.recycle_view_student);
+        imgBack = findViewById(R.id.imagView_back_home1);
     }
 
     private void readFromDBTheCourse(){

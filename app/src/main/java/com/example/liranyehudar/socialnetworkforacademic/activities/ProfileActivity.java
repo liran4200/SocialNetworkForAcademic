@@ -3,6 +3,7 @@ package com.example.liranyehudar.socialnetworkforacademic.activities;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,20 +15,32 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.target.Target;
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ChildCategory;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ParentCategory;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,8 +71,11 @@ public class ProfileActivity extends AppCompatActivity {
     private Student student;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    private StorageReference storageReference;
+    private FirebaseAuth auth;
     private String allCourses;
-    private String [] theCourses;
+    private ImageView imgBack;
+    private Uri selectImage;
 
 
 
@@ -69,6 +85,8 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        auth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
         setUI();
         updateUI();
         readCourseFromDB();
@@ -98,6 +116,38 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileActivity.super.onBackPressed();
+            }
+        });
+
+    }
+
+    private void writeDataOfStudent(){
+        database = FirebaseDatabase.getInstance();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference studentRef =  database.getReference().child("Students").child(userId);
+        studentRef.setValue(student);
+    }
+
+    private void writeImageToStorage(){
+        FirebaseUser user =auth.getCurrentUser();
+        String userId = user.getUid();
+        StorageReference storageReference1 = storageReference.child("images/users/"+userId+"/" +"image"+".jpg");
+        storageReference1.putFile(selectImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                toastMessage("Upload Success");
+            }
+        });
+    }
+
+
+    private void toastMessage(String message){
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
 
     private void readCourseFromDB(){
@@ -201,6 +251,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         builder.show();
+        writeImageToStorage();
+        student.setProfileImageUrl(true);
+        writeDataOfStudent();
     }
 
 
@@ -228,7 +281,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(resultCode == Activity.RESULT_OK){
             if(requestCode == SELECT_FILE){
                 final CharSequence [] items = {"Is Ok","Inverted picture ","Picture on the right side","Picture on the left side"};
-                Uri selectImage = data.getData();
+                selectImage = data.getData();
                 profileImg.setImageURI(selectImage);
                 if(counerRot == false){
                     profileImg.setRotation(profileImg.getRotation()+ 270);
@@ -250,6 +303,9 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
+                writeImageToStorage();
+                student.setProfileImageUrl(true);
+                writeDataOfStudent();
 
             }
         }
@@ -265,6 +321,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileImg = (ImageView)findViewById(R.id.user_profile_image);
         camera = (ImageView)findViewById(R.id.camera_profile);
         layout = (ExpandableLayout)findViewById(R.id.expandable_layout);
+        imgBack = (ImageView)findViewById(R.id.imagView_back_home);
     }
 
     private void updateUI() {
@@ -280,6 +337,15 @@ public class ProfileActivity extends AppCompatActivity {
         year_txt.setText("Year: " + student.getYear());
         field_txt.setText("Study: "+student.getField());
         userSkills = student.getSkills();
+        if(student.getProfileImageUrl() == true) {
+            downloadImage();
+        }
+    }
+
+    private void downloadImage(){
+        String userId = student.getKey();
+        StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/"+userId+"/image.jpg");
+        Glide.with(this /* context */).using(new FirebaseImageLoader()).load(storageReference1).fitCenter().into(profileImg);
     }
 
 
