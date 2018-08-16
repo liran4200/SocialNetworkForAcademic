@@ -13,6 +13,15 @@
         android:layout_height="wrap_content"
         android:minHeight="800dp">
 
+        <ImageView
+            android:id="@+id/imagView_back_home"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="45dp"
+            android:layout_height="35dp"
+            android:background="@drawable/baseline_arrow_back_black_24dp"/>
+
+
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="345dp"
