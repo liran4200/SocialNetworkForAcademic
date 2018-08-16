@@ -7,6 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
@@ -32,6 +35,10 @@ public class ChatGroupActivity extends AppCompatActivity {
     private EditText edtMessage;
     private Student student;
     private String courseId;
+    private String courseName;
+    private TextView txtTitle;
+    private ImageView imgBack;
+    private ProgressBar progressBar;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase database;
@@ -60,9 +67,17 @@ public class ChatGroupActivity extends AppCompatActivity {
                 }
             }
         });
+
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChatGroupActivity.this.onBackPressed();
+            }
+        });
     }
 
     private void loadStudent(){
+        progressBar.setVisibility(View.VISIBLE);
         String userId = FirebaseAuth.getInstance().getUid();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Students/"+userId);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -95,16 +110,19 @@ public class ChatGroupActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(getApplicationContext(),databaseError.getMessage(),Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     private void updateUI() {
+        progressBar.setVisibility(View.INVISIBLE);
         if(messages.size() == 0){
 
         }
         else {
             recycleViewAdapterChatMessages.notifyDataSetChanged();
+            recyclerView.scrollToPosition(messages.size()-1);
         }
     }
 
@@ -117,6 +135,8 @@ public class ChatGroupActivity extends AppCompatActivity {
 
     private void init() {
         courseId = getIntent().getStringExtra("courseId");
+        courseName = getIntent().getStringExtra("courseName");
+        txtTitle.setText(courseName);
         messages = new ArrayList<>();
 
         recycleViewAdapterChatMessages =
@@ -132,5 +152,8 @@ public class ChatGroupActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.reyclerview_message_list);
         btnSend = findViewById(R.id.button_chatbox_send);
         edtMessage = findViewById(R.id.edittext_chatbox);
+        txtTitle = findViewById(R.id.txt_course_name);
+        imgBack = findViewById(R.id.imagView_back);
+        progressBar = findViewById(R.id.prg_messages);
     }
 }
