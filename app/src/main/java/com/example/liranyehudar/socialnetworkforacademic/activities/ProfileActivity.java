@@ -86,11 +86,6 @@ public class ProfileActivity extends AppCompatActivity {
     private Uri selectImage;
 
 
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,15 +137,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void writeDataOfStudent(){
         database = FirebaseDatabase.getInstance();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = student.getKey();
 
         DatabaseReference studentRef =  database.getReference().child("Students").child(userId);
         studentRef.setValue(student);
     }
 
     private void writeImageToStorage(){
-        FirebaseUser user =auth.getCurrentUser();
-        String userId = user.getUid();
+        String userId = student.getKey();
         StorageReference storageReference1 = storageReference.child("images/users/"+userId+"/" +"image"+".jpg");
         storageReference1.putFile(selectImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -167,7 +161,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private void readCourseFromDB(){
-        final String userid = FirebaseAuth.getInstance().getUid();
+        final String userid = student.getKey();
         database = FirebaseDatabase.getInstance();
         ref =  database.getReference("Courses");
 
@@ -353,7 +347,6 @@ public class ProfileActivity extends AppCompatActivity {
             camera.setVisibility(View.INVISIBLE);
         }
         name_txt.setText(student.getFirstName() + " " + student.getLastName());
-        ;
         country_txt.setText(student.getCity() + "," + student.getCountry());
         education_txt.setText("Education: " + student.getAcademic());
         year_txt.setText("Year: " + student.getYear());
@@ -365,12 +358,13 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
         private void downloadImage() {
+            progressBarPosts.setVisibility(View.VISIBLE);
             String userId = student.getKey();
             StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/" + userId + "/image.jpg");
             Glide.with(this /* context */).using(new FirebaseImageLoader()).load(storageReference1).fitCenter().into(profileImg);
 
         }
-            private void loadPosts() {
+        private void loadPosts() {
         progressBarPosts.setVisibility(View.VISIBLE);
         database = FirebaseDatabase.getInstance();
         ref =  database.getReference("Posts");

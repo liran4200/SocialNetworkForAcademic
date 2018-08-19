@@ -322,6 +322,41 @@
                     tools:layout_editor_absoluteY="0dp" />
 
                 <Button
+                    android:id="@+id/select_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/cardview_light_background"
+                    android:text="Select File"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/btn_files"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/upload_files"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/the_files"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="No file is selected"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.029"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/upload_files"
+                    app:layout_constraintVertical_bias="0.129" />
+
+                <Button
                     android:id="@+id/btn_files"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -334,8 +369,10 @@
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/upload_files"
+                    app:layout_constraintVertical_bias="1.0"
                     tools:ignore="MissingConstraints" />
 
                 <ImageView
