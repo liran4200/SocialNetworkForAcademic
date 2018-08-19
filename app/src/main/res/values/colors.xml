@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#ea22d3</color>
+    <color name="colorPrimaryDark">#561479</color>
+    <color name="colorAccent">#ed1221</color>
     
-    <color name="colorBackGroundApp">#72b52b</color>
-    <color name="colorLoginButton">#145116</color>
+    <color name="colorBackGroundApp">#c73b6a</color>
+    <color name="colorLoginButton">#ed1221</color>
+    <color name="colorButton">#ed1221</color>
     
-    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhite">#ffffff</color>
     <color name="colorTransparent">#80FFFFFF</color>
     <color name="colorNavText">#28450a</color>
     <color name="colorForUser">#048b7a</color>

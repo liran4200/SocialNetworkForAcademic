@@ -64,6 +64,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:layout_marginLeft="15dp"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -79,27 +80,10 @@
             <ImageView
                 android:layout_marginLeft="10dp"
                 android:id="@+id/imageView_likes"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:adjustViewBounds="true"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/like_icon"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-"
-                android:textSize="20sp"
-                android:layout_marginLeft="10dp"/>
-
-
-            <TextView
-                android:id="@+id/txt_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="10 comments"
-                android:textSize="14sp" />
+                android:src="@drawable/baseline_thumb_up_alt_black_24dp"/>
 
         </LinearLayout>
 
@@ -120,7 +104,7 @@
         android:layout_below="@id/imageView_line">
 
         <RelativeLayout
-        android:layout_weight="1"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -148,35 +132,6 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:id="@+id/layout_comment"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/baseline_insert_comment_black_24dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp"
-                    android:layout_marginLeft="10dp"
-                    android:text="Comment"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
 
     </LinearLayout>
 

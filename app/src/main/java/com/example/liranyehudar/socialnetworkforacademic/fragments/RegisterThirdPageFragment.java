@@ -105,7 +105,7 @@ public class RegisterThirdPageFragment extends Fragment {
     }
 
     private void initSpinner(ArrayList<String> list, Spinner sp) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_spinner, list);
         sp.setAdapter(adapter);
     }
 

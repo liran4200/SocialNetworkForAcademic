@@ -2,59 +2,83 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackGroundApp"
+    android:background="@color/colorWhite"
     >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="458dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorBackGroundApp">
+
+        <TextView
+            android:layout_width="166dp"
+            android:visibility="invisible"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="47dp"
+            android:layout_marginTop="66dp"
+            android:text="Welcome!"
+            android:textColor="@color/colorWhite"
+            android:textSize="35dp"
+            android:textStyle="italic" />
+
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
-        
+        android:layout_centerInParent="true"
+        android:background="@drawable/login"
+        android:orientation="vertical">
+
         <EditText
             android:id="@+id/edt_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:ems="10"
             android:drawableLeft="@drawable/baseline_email_black_24dp"
             android:drawablePadding="10dp"
-
+            android:ems="10"
             android:hint="Your email"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName"
+            android:textColorHint="@android:color/background_light" />
 
         <EditText
             android:id="@+id/edt_password"
+            android:textColorHint="@color/colorWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
             android:drawableLeft="@drawable/baseline_lock_black_24dp"
             android:drawablePadding="10dp"
-            android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Password"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/button_login"
-            android:layout_width="145dp"
-            android:layout_height="51dp"
+            android:layout_width="195dp"
+            android:layout_height="25dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:background="@color/colorLoginButton"
-            android:text="Login" />
+            android:text="Login"
+            android:textColor="@color/colorWhite" />
 
-        <com.facebook.login.widget.LoginButton
-            xmlns:facebook="http://schemas.android.com/apk/res-auto"
-            facebook:com_facebook_login_text="Login with facebook"
-            facebook:com_facebook_logout_text="Logout"
+        <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
             android:id="@+id/login_button"
             android:layout_width="204dp"
             android:layout_height="39dp"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp" />
+            android:layout_marginTop="30dp"
+            facebook:com_facebook_login_text="Login with facebook"
+            facebook:com_facebook_logout_text="Logout" />
 
         <TextView
             android:id="@+id/txt_or"
@@ -63,17 +87,19 @@
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="20dp"
-            android:text="Or"
+            android:text="- Or -"
             android:textSize="18sp" />
 
         <Button
             android:id="@+id/button_create_account"
-            android:layout_width="193dp"
-            android:layout_height="67dp"
-            android:background="@color/colorLoginButton"
-            android:text="Create Account"
+            android:layout_width="166dp"
+            android:layout_height="28dp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/colorLoginButton"
+            android:text="Create account"
+            android:textColor="@color/colorWhite" />
 
     </LinearLayout>
 

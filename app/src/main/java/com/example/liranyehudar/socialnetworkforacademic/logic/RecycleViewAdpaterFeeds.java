@@ -54,7 +54,6 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
         holder.txtStatus.setText(p.getStatus());
         String time = getTimeSincePosts(p);
         holder.txtTime.setText(time);
-        holder.txtCommentsAmount.setText(p.getComments()+" comments");
         holder.txtLikesAmount.setText(p.getLikes()+"");
         holder.imgViewLike.setColorFilter(Color.TRANSPARENT); // defualt color.
         final String userId = FirebaseAuth.getInstance().getUid();
@@ -122,7 +121,6 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
 
         TextView fullName;
         TextView txtLikesAmount;
-        TextView txtCommentsAmount;
         TextView txtTime;
         TextView txtStatus;
         ImageView imgViewLike;
@@ -134,7 +132,6 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
 
             fullName = itemView.findViewById(R.id.txt_fullname);
             txtLikesAmount =itemView.findViewById(R.id.txt_likes_amount);
-            txtCommentsAmount = itemView.findViewById(R.id.txt_comment);
             txtTime = itemView.findViewById(R.id.txt_date_time);
             txtStatus = itemView.findViewById(R.id.txt_status);
             layoutLikes = itemView.findViewById(R.id.layout_likes);

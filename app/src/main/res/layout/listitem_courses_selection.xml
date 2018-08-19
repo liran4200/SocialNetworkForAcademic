@@ -3,6 +3,7 @@
     android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorLoginButton"
     android:orientation="vertical">
 
 
@@ -26,13 +27,14 @@
 
         <CheckBox
             android:id="@+id/selected"
-            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:textColorLink="@color/colorWhite" />
 
     </LinearLayout>
 
@@ -48,6 +50,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:text="DESCRIPTION"
+            android:textColor="@color/colorWhite"
             android:textSize="14sp" />
 
         <TextView
@@ -56,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
+            android:textColor="@color/colorWhite"
             android:text="TIMING" />
 
     </LinearLayout>
