@@ -22,7 +22,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainLoginActivity extends AppCompatActivity{
 
@@ -81,7 +80,7 @@ public class MainLoginActivity extends AppCompatActivity{
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Login");
-        progressDialog.setMessage("Please wait, login...");
+        progressDialog.setMessage("Login, Please wait...");
         progressDialog.setCanceledOnTouchOutside(false);
     }
 
@@ -150,11 +149,13 @@ public class MainLoginActivity extends AppCompatActivity{
     }
 
     private void handleFacebookAccessToken(final AccessToken token) {
+        progressDialog.show();
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(Task<AuthResult> task) {
+                        progressDialog.cancel();
                         if (task.isSuccessful()) {
                                 // check if this is a new user for create account
                                 if (task.getResult().getAdditionalUserInfo().isNewUser()) {

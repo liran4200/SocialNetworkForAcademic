@@ -1,5 +1,6 @@
 package com.example.liranyehudar.socialnetworkforacademic.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -58,6 +59,7 @@ public class HomeFeedFragment extends Fragment {
     private ProgressBar progressBarPosts;
     private TextView txtNoPosts;
     private CircleImageView imgProfile;
+    private ProgressDialog progressDialog;
 
     private Student student;
     private DatabaseReference ref;
@@ -97,6 +99,7 @@ public class HomeFeedFragment extends Fragment {
         txtLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog.show();
                 FirebaseAuth.getInstance().signOut();
                 if (AccessToken.getCurrentAccessToken() != null) {
                     disconnectFromFacebook();
@@ -116,9 +119,14 @@ public class HomeFeedFragment extends Fragment {
         adpaterFeeds = new RecycleViewAdpaterFeeds(postArrayList,view.getContext());
         recyclerView.setAdapter(adpaterFeeds);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.setTitle("Logout");
+        progressDialog.setMessage("Logout, Please wait...");
+        progressDialog.setCanceledOnTouchOutside(false);
     }
 
     private void logOut(){
+        progressDialog.cancel();
         Intent intent = new Intent(view.getContext(), MainLoginActivity.class);
         startActivity(intent);
         getActivity().finish();

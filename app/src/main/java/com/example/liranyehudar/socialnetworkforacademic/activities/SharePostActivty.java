@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 
@@ -32,7 +33,11 @@ public class SharePostActivty extends AppCompatActivity {
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String post = edtPost.getText().toString();
+                String post = edtPost.getText().toString().trim();
+                if(post.length() == 0) {
+                    Toast.makeText(v.getContext(),"Please write a post",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent returnData = new Intent();
                 returnData.putExtra("post",post);
                 setResult(RESULT_OK,returnData);
