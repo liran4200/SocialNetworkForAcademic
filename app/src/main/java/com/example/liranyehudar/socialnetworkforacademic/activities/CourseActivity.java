@@ -156,6 +156,8 @@ public class CourseActivity extends AppCompatActivity {
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 int currentProgress = (int) (100*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
                 progressDialog.setProgress(currentProgress);
+                if(currentProgress == 100)
+                    progressDialog.cancel();
             }
         });
     }
@@ -165,7 +167,7 @@ public class CourseActivity extends AppCompatActivity {
         String[] allFiles = nameFiles.split(",");
         recyclerViewForFiles.setHasFixedSize(true);
         recyclerViewForFiles.setLayoutManager(new LinearLayoutManager(this));
-        adapterFilesInCourse = new RecycleViewAdapterFilesInCourse(allFiles,getApplicationContext());
+        adapterFilesInCourse = new RecycleViewAdapterFilesInCourse(allFiles,getApplicationContext(),courseId);
         recyclerViewForFiles.setAdapter(adapterFilesInCourse);
 
     }
@@ -181,7 +183,7 @@ public class CourseActivity extends AppCompatActivity {
 
     private void selectDoc(){
         Intent intent = new Intent();
-        intent.setType("application/docx");
+        intent.setType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent,86);
     }

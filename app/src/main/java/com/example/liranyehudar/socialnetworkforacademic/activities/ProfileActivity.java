@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,14 +28,12 @@ import com.example.liranyehudar.socialnetworkforacademic.logic.ChildCategory;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ParentCategory;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Post;
-import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterStudentInCourse;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdpaterFeeds;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,9 +47,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import iammert.com.expandablelib.ExpandableLayout;
 import iammert.com.expandablelib.Section;
@@ -101,7 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
         userId = getIntent().getStringExtra("studentId");
         setUI();
         loadStudent();
-        writePosts();
+        init();
         readCourseFromDB();
         loadPosts();
 
@@ -164,16 +159,27 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void writeImageToStorage(){
+        progressDialog.show();
         StorageReference storageReference1 = FirebaseStorage.getInstance().getReference().child("images/users/"+userId+"/" +"image.jpg");
         storageReference1.putFile(selectImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 toastMessage("Upload Success");
+                loadPosts();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(ProfileActivity.this,"Upload not Success",Toast.LENGTH_SHORT).show();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                int currentProgress = (int) (100*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                progressDialog.setProgress(currentProgress);
+                if(currentProgress == 100) {
+                    progressDialog.cancel();
+                }
             }
         });
     }
@@ -234,7 +240,8 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-        layout.addSection(getSection("Courses",allCourses));
+        if(allCourses!=null)
+            layout.addSection(getSection("Courses",allCourses));
         if(userSkills.length() != 0){
             layout.addSection(getSection("Skills",userSkills));
         }
@@ -274,17 +281,19 @@ public class ProfileActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }else if(items[which].equals("Inverted picture ")){
                     profileImg.setRotation(profileImg.getRotation()+ 180);
+                    writeImageToStorage();
                 }else if(items[which].equals("Picture on the right side")){
                     profileImg.setRotation(profileImg.getRotation()+ 90);
+                    writeImageToStorage();
                 }else if(items[which].equals("Picture on the left side")){
                     profileImg.setRotation(profileImg.getRotation()+ 270);
+                    writeImageToStorage();
                 }else{
                     galleryIntent();
                 }
             }
         });
         builder.show();
-        writeImageToStorage();
         student.setProfileImageUrl(true);
         writeDataOfStudent();
 
@@ -433,11 +442,15 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void writePosts(){
+    private void init(){
         postArrayList = new ArrayList<>();
         adpaterFeeds = new RecycleViewAdpaterFeeds(postArrayList,this);
         recyclerView.setAdapter(adpaterFeeds);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setTitle("Uploading....");
+        progressDialog.setProgress(0);
     }
 
 }

@@ -41,7 +41,7 @@
                     android:id="@+id/view"
                     android:layout_width="415dp"
                     android:layout_height="wrap_content"
-                    android:background="@color/com_facebook_button_background_color_selected"
+                    android:background="@color/colorLoginButton"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteX="5dp" />
 

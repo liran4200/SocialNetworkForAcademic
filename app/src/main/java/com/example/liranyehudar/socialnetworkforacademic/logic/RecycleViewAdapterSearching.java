@@ -12,11 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecycleViewAdapterSearching extends
         RecyclerView.Adapter<RecycleViewAdapterSearching.ViewHolderStudent>{
@@ -42,7 +49,8 @@ public class RecycleViewAdapterSearching extends
         final Student student = students.get(position);
         holder.txtStudentName.setText(student.getFirstName()+" "+student.getLastName());
         holder.txtDescription.setText(student.getYear()+" year "+student.getField()+" at "+student.getAcademic());
-        //image...
+
+        downloadImage(student.getKey(),holder.imgProfile);
 
         holder.layoutStudent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +71,7 @@ public class RecycleViewAdapterSearching extends
 
     class ViewHolderStudent extends RecyclerView.ViewHolder {
 
-        private ImageView imgProfile;
+        private CircleImageView imgProfile;
         private TextView txtStudentName;
         private TextView txtDescription;
         private LinearLayout layoutStudent;
@@ -76,4 +84,11 @@ public class RecycleViewAdapterSearching extends
             layoutStudent = itemView.findViewById(R.id.linearLayout_listitem_student);
         }
     }
+
+    private void downloadImage(String userId,CircleImageView profileImg) {
+        StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/" + userId + "/image.jpg");
+        Glide.with(context.getApplicationContext()/* context */).using(new FirebaseImageLoader()).load(storageReference1).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+                .error(R.drawable.baseline_account_circle_black_24dp).fitCenter().into(profileImg);
+    }
+
 }

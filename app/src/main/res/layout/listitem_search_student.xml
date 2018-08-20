@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:id="@+id/linearLayout_listitem_student">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView_search_profile"
         android:layout_width="50dp"
         android:layout_height="50dp"

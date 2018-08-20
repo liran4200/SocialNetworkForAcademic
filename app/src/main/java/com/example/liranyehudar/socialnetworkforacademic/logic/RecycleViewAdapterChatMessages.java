@@ -8,13 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecycleViewAdapterChatMessages extends RecyclerView.Adapter<RecycleViewAdapterChatMessages.MessageViewHolder> {
 
@@ -39,6 +46,8 @@ public class RecycleViewAdapterChatMessages extends RecyclerView.Adapter<Recycle
         Message message = messages.get(position);
         String senderId = message.getSenderKey();
 
+        downloadImage(senderId,holder.imgSender);
+
         SimpleDateFormat sdf =
                 new SimpleDateFormat("MMM dd, HH:mm", Locale.ENGLISH);
         Date resultdate = new Date(message.getCreatedTime());
@@ -59,7 +68,7 @@ public class RecycleViewAdapterChatMessages extends RecyclerView.Adapter<Recycle
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgSender;
+        CircleImageView imgSender;
         TextView txtTime;
         TextView txtName;
         TextView txtBody;
@@ -72,5 +81,11 @@ public class RecycleViewAdapterChatMessages extends RecyclerView.Adapter<Recycle
             txtName   = itemView.findViewById(R.id.text_message_name);
             txtBody   = itemView.findViewById(R.id.text_message_body);
         }
+    }
+
+    private void downloadImage(String userId,CircleImageView profileImg) {
+        StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/" + userId + "/image.jpg");
+        Glide.with(context.getApplicationContext()/* context */).using(new FirebaseImageLoader()).load(storageReference1).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+                .error(R.drawable.baseline_account_circle_black_24dp).fitCenter().into(profileImg);
     }
 }

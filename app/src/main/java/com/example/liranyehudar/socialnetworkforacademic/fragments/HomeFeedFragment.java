@@ -71,14 +71,19 @@ public class HomeFeedFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        loadStudent();
+        loadPosts();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view  = inflater.inflate(R.layout.fragment_home_feed, container, false);
         bindUI();
         init();
-        loadStudent();
-        loadPosts();
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +162,6 @@ public class HomeFeedFragment extends Fragment {
         StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/" + userId + "/image.jpg");
         Glide.with(view.getContext() /* context */).using(new FirebaseImageLoader()).load(storageReference1).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
                 .error(R.drawable.baseline_account_circle_black_24dp).fitCenter().into(profileImg);
-
     }
 
 
