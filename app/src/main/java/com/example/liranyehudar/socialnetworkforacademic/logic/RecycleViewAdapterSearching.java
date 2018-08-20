@@ -49,7 +49,7 @@ public class RecycleViewAdapterSearching extends
             public void onClick(View v) {
                 Toast.makeText(context.getApplicationContext(),students.get(position).getFirstName(),Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(context.getApplicationContext(), ProfileActivity.class);
-                intent.putExtra("student",students.get(position));
+                intent.putExtra("studentId",students.get(position).getKey());
                 intent.putExtra("source", RegistrationTypes.FROM_SEARCHING);
                 context.startActivity(intent);
             }

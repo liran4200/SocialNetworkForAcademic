@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private CoursesFragment coursesFragment;
     private SearchFragment searchFragment;
 
+    private Fragment currentFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,23 +37,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.nav_home:
+                    case R.id.nav_home:{
+                        currentFragment = homeFeedFragment;
                         setFragment(homeFeedFragment);
                         return true;
+                    }
 
-                    case R.id.nav_courses:
+
+                    case R.id.nav_courses: {
+                        currentFragment = coursesFragment;
                         setFragment(coursesFragment);
                         return true;
+                    }
 
-                    case R.id.nav_search:
+                    case R.id.nav_search: {
+                        currentFragment = searchFragment;
                         setFragment(searchFragment);
                         return true;
+                    }
 
                         default:
                             return false;
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     private void init() {
