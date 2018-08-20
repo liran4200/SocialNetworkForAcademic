@@ -6,6 +6,7 @@
     tools:context=".fragments.SearchFragment">
 
     <LinearLayout
+        android:background="@color/colorBackGroundApp"
         android:id="@+id/linearLayout_search_bar"
         android:layout_width="match_parent"
         android:layout_height="55dp"
@@ -15,6 +16,7 @@
             android:id="@+id/edt_search"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:textColorHint="@color/colorWhite"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
@@ -30,6 +32,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="11dp"
             android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorWhite"
             android:background="@drawable/baseline_search_black_24dp"
             android:contentDescription="searching @string/com_facebook_loginview_log_in_button" />
 

@@ -129,6 +129,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ProfileActivity.super.onBackPressed();
+                finish();
             }
         });
 
@@ -278,6 +279,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if(items[which].equals("Choose from Library")){
                     galleryIntent();
+                    galleryIntent();
                 }else if(items[which].equals("Cancel")){
                     dialog.dismiss();
                 }
@@ -291,6 +293,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         if(resultCode == Activity.RESULT_OK){
             if(requestCode == SELECT_FILE){
+
                 final CharSequence [] items = {"Is Ok","Inverted picture ","Picture on the right side","Picture on the left side"};
                 selectImage = data.getData();
                 profileImg.setImageURI(selectImage);
@@ -354,7 +357,9 @@ public class ProfileActivity extends AppCompatActivity {
         userSkills = student.getSkills();
         if (student.getProfileImageUrl() == true) {
             downloadImage();
-
+        }
+        else{
+            Toast.makeText(this,"profile:false",Toast.LENGTH_SHORT).show();
         }
     }
         private void downloadImage() {

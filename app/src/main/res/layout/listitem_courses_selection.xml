@@ -3,7 +3,7 @@
     android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorLoginButton"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
 
@@ -50,7 +50,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:text="DESCRIPTION"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorLoginButton"
             android:textSize="14sp" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorLoginButton"
             android:text="TIMING" />
 
     </LinearLayout>

@@ -75,15 +75,15 @@
                 android:layout_height="wrap_content"
                 android:text="10"
                 android:layout_marginLeft="5dp"
-                android:textSize="13sp"/>
+                android:textSize="17sp"/>
 
             <ImageView
                 android:layout_marginLeft="10dp"
                 android:id="@+id/imageView_likes"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/baseline_thumb_up_alt_black_24dp"/>
+                android:src="@drawable/like_red"/>
 
         </LinearLayout>
 

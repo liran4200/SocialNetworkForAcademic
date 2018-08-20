@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,8 +35,9 @@ public class RecycleViewAdapterChatMessages extends RecyclerView.Adapter<Recycle
 
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
+        String userId = FirebaseAuth.getInstance().getUid();
         Message message = messages.get(position);
-        String userId = message.getSenderKey();
+        String senderId = message.getSenderKey();
 
         SimpleDateFormat sdf =
                 new SimpleDateFormat("MMM dd, HH:mm", Locale.ENGLISH);
@@ -43,6 +46,10 @@ public class RecycleViewAdapterChatMessages extends RecyclerView.Adapter<Recycle
         holder.txtName.setText(message.getSenderName());
         holder.txtBody.setText(message.getBody());
         holder.txtTime.setText(sdf.format(resultdate));
+
+        if(userId.equals(senderId)){
+            holder.txtBody.setBackgroundResource(R.drawable.rounded_rectangle_sender);
+        }
     }
 
     @Override

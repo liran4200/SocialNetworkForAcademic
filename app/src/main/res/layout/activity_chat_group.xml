@@ -84,13 +84,14 @@
 
         <Button
             android:id="@+id/button_chatbox_send"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:backgroundTint="@color/colorBackGroundApp"
             android:layout_gravity="bottom"
-            android:background="@drawable/messenger_bubble_small_blue"
+            android:background="@drawable/baseline_send_black_24dp"
             android:clickable="true"
             android:gravity="center"
-            android:text="SEND"
             android:textSize="14dp" />
 
     </LinearLayout>

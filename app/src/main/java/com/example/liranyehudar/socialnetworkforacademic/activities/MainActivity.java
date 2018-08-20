@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private CoursesFragment coursesFragment;
     private SearchFragment searchFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
