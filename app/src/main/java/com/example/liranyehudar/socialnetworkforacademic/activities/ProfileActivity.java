@@ -1,12 +1,14 @@
 package com.example.liranyehudar.socialnetworkforacademic.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liranyehudar.socialnetworkforacademic.Interface.RegistrationTypes;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.ChildCategory;
@@ -30,6 +33,7 @@ import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapte
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdpaterFeeds;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +44,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -80,10 +85,11 @@ public class ProfileActivity extends AppCompatActivity {
     private RecycleViewAdpaterFeeds adpaterFeeds;
     private ArrayList<Post>postArrayList;
     private TextView txtNoPosts;
-    private StorageReference storageReference;
     private FirebaseAuth auth;
     private ImageView imgBack;
     private Uri selectImage;
+    private String userId;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -92,11 +98,10 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         auth = FirebaseAuth.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
-
+        userId = getIntent().getStringExtra("studentId");
         setUI();
+        loadStudent();
         writePosts();
-        updateUI();
         readCourseFromDB();
         loadPosts();
 
@@ -128,29 +133,47 @@ public class ProfileActivity extends AppCompatActivity {
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfileActivity.super.onBackPressed();
-                finish();
+                    ProfileActivity.super.onBackPressed();
             }
         });
 
 
     }
 
+
+    private void loadStudent(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Students/"+userId);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                student = dataSnapshot.getValue(Student.class);
+                updateUI();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ProfileActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void writeDataOfStudent(){
         database = FirebaseDatabase.getInstance();
-        String userId = student.getKey();
-
         DatabaseReference studentRef =  database.getReference().child("Students").child(userId);
         studentRef.setValue(student);
     }
 
     private void writeImageToStorage(){
-        String userId = student.getKey();
-        StorageReference storageReference1 = storageReference.child("images/users/"+userId+"/" +"image"+".jpg");
+        StorageReference storageReference1 = FirebaseStorage.getInstance().getReference().child("images/users/"+userId+"/" +"image.jpg");
         storageReference1.putFile(selectImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 toastMessage("Upload Success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfileActivity.this,"Upload not Success",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -162,7 +185,6 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private void readCourseFromDB(){
-        final String userid = student.getKey();
         database = FirebaseDatabase.getInstance();
         ref =  database.getReference("Courses");
 
@@ -170,7 +192,7 @@ public class ProfileActivity extends AppCompatActivity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                takeAllCourse(dataSnapshot,userid);
+                takeAllCourse(dataSnapshot,userId);
                 doLayout();
             }
 
@@ -279,7 +301,6 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if(items[which].equals("Choose from Library")){
                     galleryIntent();
-                    galleryIntent();
                 }else if(items[which].equals("Cancel")){
                     dialog.dismiss();
                 }
@@ -293,7 +314,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         if(resultCode == Activity.RESULT_OK){
             if(requestCode == SELECT_FILE){
-
                 final CharSequence [] items = {"Is Ok","Inverted picture ","Picture on the right side","Picture on the left side"};
                 selectImage = data.getData();
                 profileImg.setImageURI(selectImage);
@@ -343,11 +363,10 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        student = (Student) getIntent().getSerializableExtra(STUDENT);
         int source = getIntent().getIntExtra("source", -1);
-        if (source == RegistrationTypes.FROM_SEARCHING) {
-            editProfile.setVisibility(View.INVISIBLE);
-            camera.setVisibility(View.INVISIBLE);
+        if (source == RegistrationTypes.FROM_SEARCHING || source == RegistrationTypes.FROM_PARTICIPENT_COURSE) {
+                editProfile.setVisibility(View.INVISIBLE);
+                camera.setVisibility(View.INVISIBLE);
         }
         name_txt.setText(student.getFirstName() + " " + student.getLastName());
         country_txt.setText(student.getCity() + "," + student.getCountry());
@@ -355,18 +374,13 @@ public class ProfileActivity extends AppCompatActivity {
         year_txt.setText("Year: " + student.getYear());
         field_txt.setText("Study: " + student.getField());
         userSkills = student.getSkills();
-        if (student.getProfileImageUrl() == true) {
-            downloadImage();
-        }
-        else{
-            Toast.makeText(this,"profile:false",Toast.LENGTH_SHORT).show();
-        }
+        downloadImage();
+
     }
         private void downloadImage() {
             progressBarPosts.setVisibility(View.VISIBLE);
-            String userId = student.getKey();
             StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/" + userId + "/image.jpg");
-            Glide.with(this /* context */).using(new FirebaseImageLoader()).load(storageReference1).fitCenter().into(profileImg);
+            Glide.with(this /* context */).using(new FirebaseImageLoader()).load(storageReference1).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).error(R.drawable.user_image).fitCenter().into(profileImg);
 
         }
         private void loadPosts() {
@@ -396,7 +410,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void addPosts(DataSnapshot dataSnapshot) {
         for(DataSnapshot ds : dataSnapshot.getChildren()) {
             Post post = ds.getValue(Post.class);
-            if(student.getKey().equals(post.getStudentId())) {
+            if(userId.equals(post.getStudentId())) {
                 postArrayList.add(post);
             }
         }

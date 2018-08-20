@@ -6,4 +6,6 @@ public interface RegistrationTypes {
     public static int FR0M_REGISTRATION_PROCESS = 1003;
     public static int FR0M_PROFILE = 1002;
     public static int FROM_SEARCHING = 1004;
+    public static int FROM_PARTICIPENT_COURSE = 1005;
+
 }

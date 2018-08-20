@@ -108,13 +108,11 @@ public class ProfileEditActivity extends AppCompatActivity {
                     }
                     else {
                         Intent i = new Intent(getBaseContext(), ProfileActivity.class);
-                        i.putExtra(STUDENT, student);
+                        i.putExtra("studentId", student.getKey());
                         startActivity(i);
                     }
-
                     finish();
                 }
-
             }
         });
 

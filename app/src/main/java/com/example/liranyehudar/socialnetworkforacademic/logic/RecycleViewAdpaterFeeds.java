@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
@@ -142,7 +143,7 @@ public class RecycleViewAdpaterFeeds extends RecyclerView.Adapter<RecycleViewAdp
 
     private void downloadImage(String userId,CircleImageView profileImg) {
         StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/" + userId + "/image.jpg");
-        Glide.with(context.getApplicationContext() /* context */).using(new FirebaseImageLoader()).load(storageReference1)
+        Glide.with(context.getApplicationContext() /* context */).using(new FirebaseImageLoader()).load(storageReference1).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
                 .error(R.drawable.baseline_account_circle_black_24dp).fitCenter().into(profileImg);
 
     }

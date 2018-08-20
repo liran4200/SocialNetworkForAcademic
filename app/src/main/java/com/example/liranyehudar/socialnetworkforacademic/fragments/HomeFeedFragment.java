@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.activities.MainLoginActivity;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
@@ -83,7 +84,7 @@ public class HomeFeedFragment extends Fragment {
             @Override
             public void onClick(View v) {
                Intent intent = new Intent(v.getContext(), ProfileActivity.class);
-               intent.putExtra("student",student);
+               intent.putExtra("studentId",student.getKey());
                startActivity(intent);
             }
         });
@@ -154,7 +155,7 @@ public class HomeFeedFragment extends Fragment {
 
     private void downloadImage(String userId,CircleImageView profileImg) {
         StorageReference storageReference1 = FirebaseStorage.getInstance().getReferenceFromUrl("gs://socialnetworkforacademic.appspot.com/images/users/" + userId + "/image.jpg");
-        Glide.with(view.getContext() /* context */).using(new FirebaseImageLoader()).load(storageReference1)
+        Glide.with(view.getContext() /* context */).using(new FirebaseImageLoader()).load(storageReference1).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
                 .error(R.drawable.baseline_account_circle_black_24dp).fitCenter().into(profileImg);
 
     }

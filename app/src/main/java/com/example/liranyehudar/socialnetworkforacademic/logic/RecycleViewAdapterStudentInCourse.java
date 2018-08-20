@@ -11,12 +11,14 @@ import android.widget.TextView;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.activities.ProfileActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
 public class RecycleViewAdapterStudentInCourse extends RecyclerView.Adapter<RecycleViewAdapterStudentInCourse.StudentViewHolder>{
     private ArrayList<Student> allStudents;
     private Context context;
+    private FirebaseAuth auth;
 
     public RecycleViewAdapterStudentInCourse(ArrayList<Student> all_students,Context context) {
         this.allStudents = all_students;
@@ -33,14 +35,19 @@ public class RecycleViewAdapterStudentInCourse extends RecyclerView.Adapter<Recy
 
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, final int position) {
+        auth = FirebaseAuth.getInstance();
+        final String key = auth.getUid();
         holder.theText.setText(allStudents.get(position).getFirstName()+" "+allStudents.get(position).getLastName());
         holder.theText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context.getApplicationContext(), ProfileActivity.class);
-                intent.putExtra("student",allStudents.get(position));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                if(!allStudents.get(position).getKey().equals(key)){
+                    Intent intent = new Intent(context.getApplicationContext(), ProfileActivity.class);
+                    intent.putExtra("studentId",allStudents.get(position).getKey());
+                    intent.putExtra("source",1005);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
             }
         });
     }

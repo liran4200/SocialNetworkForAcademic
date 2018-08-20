@@ -2,6 +2,7 @@ package com.example.liranyehudar.socialnetworkforacademic.logic;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -18,10 +19,33 @@ public class Course {
     private Time startTime;
     private Time endTime;
     private Map<String,Boolean> StudentsId = new HashMap<>();
+    private int uploadFiles = 0;
+    private String namesOfFile;
 
     public Course() {
 
     }
+
+    public void setNamesOfFile(String nameFile) {
+        if(this.namesOfFile == null){
+            this.namesOfFile = nameFile +",";
+        }else{
+            this.namesOfFile += nameFile +"," ;
+        }
+    }
+
+    public String getNamesOfFile() {
+        return namesOfFile;
+    }
+
+    public void setUploadFiles(int uploadFiles) {
+        this.uploadFiles += uploadFiles ;
+    }
+
+    public int getUploadFiles() {
+        return uploadFiles;
+    }
+
 
     public Map<String, Boolean> getStudentsId() {
         return StudentsId;

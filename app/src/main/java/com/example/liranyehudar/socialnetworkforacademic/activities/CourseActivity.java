@@ -3,8 +3,10 @@ package com.example.liranyehudar.socialnetworkforacademic.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.liranyehudar.socialnetworkforacademic.R;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Course;
+import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterFilesInCourse;
 import com.example.liranyehudar.socialnetworkforacademic.logic.RecycleViewAdapterStudentInCourse;
 import com.example.liranyehudar.socialnetworkforacademic.logic.Student;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,6 +52,8 @@ public class CourseActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private RecyclerView recyclerView;
+    private RecyclerView recyclerViewForFiles;
+    private RecycleViewAdapterFilesInCourse adapterFilesInCourse;
     private RecycleViewAdapterStudentInCourse adapter;
     private ArrayList<Student>all_students;
     private String courseId;
@@ -57,6 +62,7 @@ public class CourseActivity extends AppCompatActivity {
     private Button upload;
     private Uri pdfOrDocxUri;
     private ProgressDialog progressDialog;
+    private String nameOfFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +117,15 @@ public class CourseActivity extends AppCompatActivity {
         });
     }
 
+
+    private void writeDataOfCourse(){
+        database = FirebaseDatabase.getInstance();
+        String userId = course.getKey();
+
+        DatabaseReference studentRef =  database.getReference().child("Courses").child(userId);
+        studentRef.setValue(course);
+    }
+
     private void uploadFile(final Uri pdfUri){
 
         progressDialog = new ProgressDialog(this);
@@ -119,14 +134,17 @@ public class CourseActivity extends AppCompatActivity {
         progressDialog.setProgress(0);
         progressDialog.show();
 
-        final String fileName = System.currentTimeMillis()+"";
+        final String fileName = nameOfFile;
         StorageReference storageReference = storage.getReference();
         storageReference.child("course_files/"+course.getKey()+"/").child(fileName).putFile(pdfUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 DatabaseReference reference = database.getReference();
                 Toast.makeText(CourseActivity.this,"File successfully upload",Toast.LENGTH_SHORT).show();
-
+                course.setUploadFiles(1);
+                course.setNamesOfFile(fileName);
+                writeDataOfCourse();
+                printAllFiles();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -141,6 +159,18 @@ public class CourseActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void printAllFiles() {
+        String nameFiles = course.getNamesOfFile();
+        String[] allFiles = nameFiles.split(",");
+        recyclerViewForFiles.setHasFixedSize(true);
+        recyclerViewForFiles.setLayoutManager(new LinearLayoutManager(this));
+        adapterFilesInCourse = new RecycleViewAdapterFilesInCourse(allFiles,getApplicationContext());
+        recyclerViewForFiles.setAdapter(adapterFilesInCourse);
+
+    }
+
+
 
     private void selectPdf(){
         Intent intent = new Intent();
@@ -160,7 +190,11 @@ public class CourseActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 86 && resultCode == RESULT_OK && data != null){
             pdfOrDocxUri = data.getData();
-            notification.setText("A file selected : " +data.getData().getLastPathSegment());
+            Cursor returnCursor = getContentResolver().query(pdfOrDocxUri, null, null, null, null);
+            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            returnCursor.moveToFirst();
+            notification.setText("A file selected : " +returnCursor.getString(nameIndex));
+            nameOfFile = returnCursor.getString(nameIndex);
         }else{
             Toast.makeText(CourseActivity.this,"Please select a file",Toast.LENGTH_SHORT).show();
         }
@@ -178,6 +212,7 @@ public class CourseActivity extends AppCompatActivity {
         selectFile = findViewById(R.id.select_file);
         upload = findViewById(R.id.btn_files);
         notification = findViewById(R.id.the_files);
+        recyclerViewForFiles = findViewById(R.id.recycle_view_files);
     }
 
     private void readFromDBTheCourse(){
@@ -242,6 +277,9 @@ public class CourseActivity extends AppCompatActivity {
         lecturer.setText("Lecturer: "+course.getLecture());
         time.setText("Hours: "+course.getStartTime().toString() + "-"+course.getEndTime().toString());
         day.setText("Day: "+course.getDay());
+        if(course.getUploadFiles() != 0){
+            printAllFiles();
+        }
 
     }
 
