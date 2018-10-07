@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SocialNetworkForAcademic</string>
-    <string name="facebook_app_id">1967914600186667</string>
-    <string name="fb_login_protocol_scheme">fb1967914600186667</string>
+    <string name="facebook_app_id">YourKey</string>
+    <string name="fb_login_protocol_scheme">fbYourKey</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
