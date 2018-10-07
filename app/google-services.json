@@ -1,6 +1,6 @@
 {
   "project_info": {
-    "project_number": "1023286739295",
+    "project_number": "YourKey",
     "firebase_url": "https://socialnetworkforacademic.firebaseio.com",
     "project_id": "socialnetworkforacademic",
     "storage_bucket": "socialnetworkforacademic.appspot.com"
@@ -8,14 +8,14 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1023286739295:android:c9238d33b36ea155",
+        "mobilesdk_app_id": "1:YourKey:android:c9238d33b36ea155",
         "android_client_info": {
           "package_name": "com.example.liranyehudar.socialnetworkforacademic"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1023286739295-m80p7ppf51k2dvdttu9kusd21d7k1q80.apps.googleusercontent.com",
+          "client_id": "YourKey-m80p7ppf51k2dvdttu9kusd21d7k1q80.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
